@@ -141,7 +141,7 @@ export class BookNavigator extends LitElement {
    */
   get baseProviderConfig() {
     return  {
-      baseHost: this.baseHost,
+      baseHost: window.location.origin,
       modal: this.modal,
       sharedObserver: this.sharedObserver,
       bookreader: this.bookreader,
@@ -165,14 +165,14 @@ export class BookNavigator extends LitElement {
    */
   initializeBookSubmenus() {
     const providers = {
-      share: new SharingProvider(this.baseProviderConfig),
-      visualAdjustments: new VisualAdjustmentProvider({
-        ...this.baseProviderConfig,
-        /** Update menu contents */
-        onProviderChange: () => {
-          this.updateMenuContents();
-        },
-      }),
+      // share: new SharingProvider(this.baseProviderConfig),
+      // visualAdjustments: new VisualAdjustmentProvider({
+      //   ...this.baseProviderConfig,
+      //   /** Update menu contents */
+      //   onProviderChange: () => {
+      //     this.updateMenuContents();
+      //   },
+      // }),
     };
 
     if (this.shouldShowDownloadsMenu()) {
@@ -542,9 +542,9 @@ export class BookNavigator extends LitElement {
   }
 
   get itemImage() {
-    const identifier = this.itemMD?.metadata.identifier;
-    const url = `https://${this.baseHost}/services/img/${identifier}`;
-    return html`<img class="cover-img" src=${url} alt="cover image for ${identifier}">`;
+    // const identifier = this.itemMD?.metadata.identifier;
+    // const url = `https://${this.baseHost}/services/img/${identifier}`;
+    return null;
   }
 
   get placeholder() {

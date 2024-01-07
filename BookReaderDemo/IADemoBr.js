@@ -1,5 +1,5 @@
 /* global BookReader, BookReaderJSIAinit */
-import { extraVolOptions, custvolumesManifest } from './ia-multiple-volumes-manifest.js';
+// import { extraVolOptions, custvolumesManifest } from './ia-multiple-volumes-manifest.js';
 
 /**
  * This is how Internet Archive loads bookreader
@@ -65,10 +65,31 @@ const initializeBookReader = (brManifest) => {
     showToolbar: false,
     /* Multiple volumes */
     // To show multiple volumes:
-    enableMultipleBooks: false, // turn this on
-    multipleBooksList: [], // populate this  // TODO: get sample blob and tie into demo
+    enableMultipleBooks: true, // turn this on
+    multipleBooksList: {
+      "by_subprefix": {
+        "test1": {
+          "url_path": "/test2",
+          "file_subprefix": "کتاب اول",
+          "orig_sort":2,
+          "title": "کتاب اول",
+        },
+        "test3": {
+          "url_path": "/test2",
+          "file_subprefix": "کتاب اول",
+          "orig_sort": 3,
+          "title": "کتاب 444",
+        },
+        "test2": {
+          "url_path": "/test2",
+          "file_subprefix": "کتاب اول",
+          "orig_sort": 1,
+          "title": "کتاب 123",
+        },
+      }
+    }, // populate this  // TODO: get sample blob and tie into demo
     /* End multiple volumes */
-    enableBookmarks: true, // turn this on
+    enableBookmarks: false, // turn this on
     enableFSLogoShortcut: true,
   };
 
@@ -79,62 +100,84 @@ const initializeBookReader = (brManifest) => {
   }
 
   // we expect this at the global level
-  BookReaderJSIAinit(brManifest.data, options);
+  BookReaderJSIAinit(brManifest, options);
+  // BookReaderJSIAinit(brManifest.data, options);
 
-  const isRestricted = brManifest.data.isRestricted;
-  window.dispatchEvent(new CustomEvent('contextmenu', { detail: { isRestricted } }));
-  if (customAutoflipParams.autoflip) {
-    window.br.autoToggle(customAutoflipParams);
-  }
+  // const isRestricted = brManifest.data.isRestricted;
+  // window.dispatchEvent(new CustomEvent('contextmenu', { detail: { isRestricted } }));
+  // if (customAutoflipParams.autoflip) {
+  //   window.br.autoToggle(customAutoflipParams);
+  // }
 };
 
 window.initializeBookReader = initializeBookReader;
 
-const showLCP = document.querySelector('#show-lcp');
-showLCP.addEventListener('click', async () => {
-  const iaBr = document.querySelector('ia-bookreader');
-  const bookNav = iaBr.shadowRoot.querySelector('book-navigator');
+const fetchBookManifestAndInitializeBookreader = async () => {
+  // iaBookReader.item = iaMetadata;
 
-  bookNav.downloadableTypes = downloadListWithLCP;
+  // const jsiaParams = {
+  //   format: 'jsonp',
+  //   itemPath: iaMetadata.dir,
+  //   id: iaMetadata.metadata.identifier,
+  //   server: iaMetadata.server,
+  // };
 
-  bookNav.updateMenuContents();
-  await bookNav.updateComplete;
-});
-
-const multiVolume = document.querySelector('#multi-volume');
-multiVolume.addEventListener('click', () => {
-  // remove everything
-  $('#BookReader').empty();
-  delete window.br;
-  // and re-mount with a new book
-  BookReaderJSIAinit(custvolumesManifest, extraVolOptions);
-});
-
-
-const fetchBookManifestAndInitializeBookreader = async (iaMetadata) => {
-  document.querySelector('input[name="itemMD"]').checked = true;
-  iaBookReader.item = iaMetadata;
-
-  const jsiaParams = {
-    format: 'jsonp',
-    itemPath: iaMetadata.dir,
-    id: iaMetadata.metadata.identifier,
-    server: iaMetadata.server,
-  };
-
-  const jp2File = iaMetadata.files.find(f => f.name.endsWith('_jp2.zip'))
-  if (jp2File) {
-    jsiaParams.subPrefix = jp2File.name.replace('_jp2.zip', '');
-  }
-
-  const iaManifestUrl = `https://${iaMetadata.server}/BookReader/BookReaderJSIA.php?${
-    new URLSearchParams(jsiaParams)
-  }`;
+  // const jp2File = iaMetadata.files.find(f => f.name.endsWith('_jp2.zip'))
+  // if (jp2File) {
+  //   jsiaParams.subPrefix = jp2File.name.replace('_jp2.zip', '');
+  // }
+  const iaManifestUrl = `http://api.hesamhelperdomain.ir/api/bookreader/bnr/bnr10007/bnr10007-1.pdf`
+  // const iaManifestUrl = `https://ia800900.us.archive.org/BookReader/BookReaderJSIA.php?format=jsonp&itemPath=%2F25%2Fitems%2Ftheworksofplato01platiala&id=theworksofplato01platiala&server=ia800900.us.archive.org&subPrefix=theworksofplato01platiala`;
 
   const manifest = await fetch(iaManifestUrl).then(response => response.json());
-  document.querySelector('input[name="bookManifest"]').checked = true;
 
-  initializeBookReader(manifest);
+  const contentListUrl = `http://api.hesamhelperdomain.ir/api/show_attachments/bnr/bnr100/`
+  const tableOfContent = await fetch(contentListUrl).then(response => response.json());
+  
+  // initializeBookReader({brOptions: manifest.data.brOptions});
+  initializeBookReader({brOptions: {
+    ...manifest,
+    // "lendingInfo": {},
+    // "imagesBaseURL": "https://esm.archive.org/@internetarchive/bookreader@5.0.0-77/BookReader/images/",
+    // "enableExperimentalControls": true,
+    // "enablePageResume": true,
+    // "el": "#BookReader",
+    // "enableBookTitleLink": false,
+    // "bookUrlText": null,
+    // "startFullscreen": false,
+    // "initialSearchTerm": "",
+    // "showToolbar": false,
+    // "enableMultipleBooks": false,
+    // "multipleBooksList": [],
+    // "enableBookmarks": false,
+    // "enableFSLogoShortcut": true,
+    "enableChaptersPlugin": false,
+    // "table_of_contents": tableOfContent.attachments
+    // "bookPath": "/25/items/theworksofplato01platiala/theworksofplato01platiala",
+    // "imageFormat": "jp2",
+    // "server": "ia800900.us.archive.org",
+    // "subPrefix": "theworksofplato01platiala",
+    // "zip": "/25/items/theworksofplato01platiala/theworksofplato01platiala_jp2.zip",
+    // "bookTitle": "The works of Plato : a new and literal version, chiefly from the text of Stallbaum",
+    // "ppi": "400",
+    // "titleLeaf": 1,
+    // "coverLeaf": 1,
+    // "defaultStartLeaf": 1,
+    // "pageProgression": "lr",
+    // "vars": {
+    //     "bookId": "theworksofplato01platiala",
+    //     "bookPath": "/25/items/theworksofplato01platiala/theworksofplato01platiala",
+    //     "server": "ia800900.us.archive.org",
+    //     "subPrefix": "theworksofplato01platiala"
+    // },
+    // "plugins": {
+    //     "textSelection": {
+    //         "enabled": true,
+    //         "singlePageDjvuXmlUrl": "https://{{server}}/BookReader/BookReaderGetTextWrapper.php?path={{bookPath|urlencode}}_djvu.xml&mode=djvu_xml&page={{pageIndex}}"
+    //     }
+    // },
+  }});
+  // initializeBookReader(manifest);
 };
 
 // Temp; Circumvent bug in BookReaderJSIA code
@@ -142,6 +185,5 @@ window.Sentry = null;
 window.logError = function(e) {
   console.error(e);
 };
-fetch(`https://archive.org/metadata/${ocaid}`)
-  .then(response => response.json())
-  .then(iaMetadata => fetchBookManifestAndInitializeBookreader(iaMetadata));
+
+fetchBookManifestAndInitializeBookreader()

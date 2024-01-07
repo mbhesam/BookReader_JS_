@@ -11,11 +11,11 @@ import '@internetarchive/icon-toc/icon-toc';
  * Could be forked, or extended to alter behavior
  */
 
-jQuery.extend(BookReader.defaultOptions, {
-  olHost: 'https://openlibrary.org',
-  enableChaptersPlugin: true,
-  bookId: '',
-});
+// jQuery.extend(BookReader.defaultOptions, {
+//   olHost: 'https://openlibrary.org',
+//   enableChaptersPlugin: true,
+//   bookId: '',
+// });
 
 /** @override Extend to call Open Library for TOC */
 BookReader.prototype.init = (function(super_) {
@@ -34,24 +34,19 @@ BookReader.prototype._chapterInit = async function() {
   // requests to OL.
   if (this.options.table_of_contents?.length) {
     rawTableOfContents = this.options.table_of_contents;
-  } else {
-    const olEdition = await this.getOpenLibraryRecord(this.options.olHost, this.options.bookId);
-    if (olEdition?.table_of_contents?.length) {
-      rawTableOfContents = olEdition.table_of_contents;
-    }
   }
 
   if (rawTableOfContents) {
     this._tocEntries = rawTableOfContents
-      .map(rawTOCEntry => (Object.assign({}, rawTOCEntry, {
-        pageIndex: (
-          typeof(rawTOCEntry.leaf) == 'number' ? this.book.leafNumToIndex(rawTOCEntry.leaf) :
-            rawTOCEntry.pagenum ? this.book.getPageIndex(rawTOCEntry.pagenum) :
-              undefined
-        ),
-      })));
+      // .map(rawTOCEntry => (Object.assign({}, rawTOCEntry, {
+      //   pageIndex: (
+      //     typeof(rawTOCEntry.leaf) == 'number' ? this.book.leafNumToIndex(rawTOCEntry.leaf) :
+      //       rawTOCEntry.pagenum ? this.book.getPageIndex(rawTOCEntry.pagenum) :
+      //         undefined
+      //   ),
+      // })));
     this._chaptersRender(this._tocEntries);
-    this.bind(BookReader.eventNames.pageChanged, () => this._chaptersUpdateCurrent());
+    // this.bind(BookReader.eventNames.pageChanged, () => this._chaptersUpdateCurrent());
   }
 };
 
@@ -63,7 +58,7 @@ BookReader.prototype._chaptersRender = function() {
   shell.menuProviders['chapters'] = {
     id: 'chapters',
     icon: html`<ia-icon-toc style="width: var(--iconWidth); height: var(--iconHeight);"></ia-icon-toc>`,
-    label: 'Table of Contents',
+    label: 'جلدهای دیگر',
     component: html`<br-chapters-panel
       .contents="${this._tocEntries}"
       .jumpToPage="${(pageIndex) => {
@@ -243,7 +238,7 @@ export class BRChaptersPanel extends LitElement {
       ${chapterTitle}
       ${tocEntry.pagenum ? html`
         <br />
-        <span class="BRTOCElementPage">Page ${tocEntry.pagenum}</span>
+        <span class="BRTOCElementPage">Pagggge ${tocEntry.pagenum}</span>
       ` : nothing}
     </li>`;
   }
