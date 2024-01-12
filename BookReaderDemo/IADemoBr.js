@@ -26,17 +26,6 @@ const getUrlParams = () => {
 
 const iaBookReader = document.querySelector('ia-bookreader');
 
-const downloadListWithLCP = [
-  [
-    "lcpPDF",
-    "link to lcp pdf"
-  ],
-  [
-    "lcpEPUB",
-    "link to lcp epub"
-  ]
-];
-
 if (openFullImmersionTheater) {
   $(document.body).addClass('BRfullscreenActive');
   iaBookReader.fullscreen = openFullImmersionTheater;
@@ -63,6 +52,21 @@ const generateMultipleBooksData = (bookArray) => {
     }
   });
   return multipleBooks;
+}
+
+const addDownloadSection = () => {
+  const bookNav = iaBookReader.shadowRoot.querySelector('book-navigator');
+  const urlParams = getUrlParams();
+
+  const downloadList = [
+    [
+      "PDF",
+      `${apiEndpoint}/download/${urlParams.collection}/${urlParams.entity}/${urlParams.pdfName}`
+    ],
+  ];
+
+  bookNav.downloadableTypes = downloadList;
+  bookNav.updateMenuContents();
 }
 
 const initializeBookReader = (brManifest, tableOfContents) => {
@@ -108,6 +112,8 @@ const initializeBookReader = (brManifest, tableOfContents) => {
 
   // we expect this at the global level
   BookReaderJSIAinit(brManifest, options);
+  // await bookNav.updateComplete;
+  addDownloadSection();
   // BookReaderJSIAinit(brManifest.data, options);
 
   // const isRestricted = brManifest.data.isRestricted;

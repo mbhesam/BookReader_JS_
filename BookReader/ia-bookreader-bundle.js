@@ -6007,6 +6007,7 @@ class BookNavigator extends lit__WEBPACK_IMPORTED_MODULE_2__.LitElement {
       //   },
       // }),
     };
+    console.log('heeeeere', this.shouldShowDownloadsMenu());
     if (this.shouldShowDownloadsMenu()) {
       providers.downloads = new _downloads_downloads_provider_js__WEBPACK_IMPORTED_MODULE_4__["default"](this.baseProviderConfig);
     }

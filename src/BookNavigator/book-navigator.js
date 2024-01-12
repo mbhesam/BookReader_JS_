@@ -174,7 +174,7 @@ export class BookNavigator extends LitElement {
       //   },
       // }),
     };
-
+    console.log('heeeeere', this.shouldShowDownloadsMenu());
     if (this.shouldShowDownloadsMenu()) {
       providers.downloads = new DownloadProvider(this.baseProviderConfig);
     }
