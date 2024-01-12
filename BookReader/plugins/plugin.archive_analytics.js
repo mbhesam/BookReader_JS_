@@ -1,2 +1,91 @@
-"use strict";(self.webpackChunk_internetarchive_bookreader=self.webpackChunk_internetarchive_bookreader||[]).push([[810],{2815:function(e,n,a){var i;a(4043),a(2462),a(5311).extend(BookReader.defaultOptions,{enableArchiveAnalytics:!0,debugArchiveAnaltyics:!1}),BookReader.prototype.init=(i=BookReader.prototype.init,function(){var e=this;i.call(this),this.options.enableArchiveAnalytics&&this.bind(BookReader.eventNames.fragmentChange,(function(){return e.archiveAnalyticsSendFragmentChange()}))}),BookReader.prototype.archiveAnalyticsSendFragmentChange=function(){if(window.archive_analytics){var e=this.archiveAnalyticsSendFragmentChange.prevFragment,n=this.paramsFromCurrent(),a=this.fragmentFromParams(n);if(e!=a){var i={bookreader:"user_changed_view",itemid:this.bookId,cache_bust:Math.random(),offsite:1,details:0};try{i.offsite=window.top.location.hostname.match(/\.archive.org$/)?0:1,i.details=!i.offsite&&window.top.location.pathname.match(/^\/details\//)?1:0}catch(e){}window.archive_analytics.send_ping(i,null,"augment_for_ao_site");var t=this.options.lendingInfo&&this.options.lendingInfo.loanId?{loanId:this.options.lendingInfo.loanId}:{};window.archive_analytics.send_event("BookReader","UserChangedView",window.location.pathname,t),this.archiveAnalyticsSendFragmentChange.prevFragment=a}}},BookReader.prototype.archiveAnalyticsSendEvent=function(e,n,a,i){this.options.enableArchiveAnalytics&&(this.options.debugArchiveAnaltyics&&console.log("archiveAnalyticsSendEvent",arguments,window.archive_analytics),window.archive_analytics&&(i=i||{},"number"==typeof a&&(i.ev=a),window.archive_analytics.send_event(e,n,null,i)))}}},function(e){e(e.s=2815)}]);
+(self["webpackChunk_internetarchive_bookreader"] = self["webpackChunk_internetarchive_bookreader"] || []).push([["plugins/plugin.archive_analytics.js"],{
+
+/***/ "./src/plugins/plugin.archive_analytics.js":
+/*!*************************************************!*\
+  !*** ./src/plugins/plugin.archive_analytics.js ***!
+  \*************************************************/
+/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
+
+/* provided dependency */ var jQuery = __webpack_require__(/*! jquery */ "jquery");
+/* global BookReader */
+/**
+ * Plugin for Archive.org analytics
+ */
+jQuery.extend(BookReader.defaultOptions, {
+  enableArchiveAnalytics: true,
+  /** Provide a means of debugging, cause otherwise it's impossible to test locally */
+  debugArchiveAnaltyics: false
+});
+BookReader.prototype.init = function (super_) {
+  return function () {
+    super_.call(this);
+    if (this.options.enableArchiveAnalytics) {
+      this.bind(BookReader.eventNames.fragmentChange, () => this.archiveAnalyticsSendFragmentChange());
+    }
+  };
+}(BookReader.prototype.init);
+
+/** @private */
+BookReader.prototype.archiveAnalyticsSendFragmentChange = function () {
+  if (!window.archive_analytics) {
+    return;
+  }
+  const prevFragment = this.archiveAnalyticsSendFragmentChange.prevFragment;
+  const params = this.paramsFromCurrent();
+  const newFragment = this.fragmentFromParams(params);
+  if (prevFragment != newFragment) {
+    const values = {
+      bookreader: "user_changed_view",
+      itemid: this.bookId,
+      cache_bust: Math.random()
+    };
+    // EEK!  offsite embedding and /details/ page books look the same in analytics, otherwise!
+    values.offsite = 1;
+    values.details = 0;
+    try {
+      values.offsite = window.top.location.hostname.match(/\.archive.org$/) ? 0 : 1;
+      values.details = !values.offsite && window.top.location.pathname.match(/^\/details\//) ? 1 : 0;
+    } catch (e) {}
+    // avoids embed cross site exceptions -- but on (+) side, means it is and keeps marked offite!
+
+    // Send bookreader ping
+    window.archive_analytics.send_ping(values, null, "augment_for_ao_site");
+
+    // Also send tracking event ping
+    const additionalEventParams = this.options.lendingInfo && this.options.lendingInfo.loanId ? {
+      loanId: this.options.lendingInfo.loanId
+    } : {};
+    window.archive_analytics.send_event('BookReader', 'UserChangedView', window.location.pathname, additionalEventParams);
+    this.archiveAnalyticsSendFragmentChange.prevFragment = newFragment;
+  }
+};
+
+/**
+ * Sends a tracking "Event". See https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#events
+ * @param {string} category
+ * @param {string} action
+ * @param {number} [value] (must be an int)
+ * @param {Object} [additionalEventParams]
+ */
+BookReader.prototype.archiveAnalyticsSendEvent = function (category, action, value, additionalEventParams) {
+  if (!this.options.enableArchiveAnalytics) return;
+  if (this.options.debugArchiveAnaltyics) {
+    console.log("archiveAnalyticsSendEvent", arguments, window.archive_analytics);
+  }
+  if (!window.archive_analytics) return;
+  additionalEventParams = additionalEventParams || {};
+  if (typeof value == 'number') {
+    additionalEventParams.ev = value;
+  }
+  window.archive_analytics.send_event(category, action, null, additionalEventParams);
+};
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__("./src/plugins/plugin.archive_analytics.js"));
+/******/ }
+]);
 //# sourceMappingURL=plugin.archive_analytics.js.map

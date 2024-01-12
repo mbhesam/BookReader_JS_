@@ -1,2 +1,136 @@
-"use strict";(self.webpackChunk_internetarchive_bookreader=self.webpackChunk_internetarchive_bookreader||[]).push([[320],{2024:function(t,e,i){i(8077),i(228);var o,a=i(5311),n=i(5311);a.extend(BookReader.defaultOptions,{enableAutoPlayPlugin:!0}),BookReader.prototype.setup=(o=BookReader.prototype.setup,function(t){o.call(this,t),this.auto=!1,this.autoTimer=null,this.flipDelay=5e3}),BookReader.prototype.init=function(t){return function(e){var i=this;t.call(this,e),this.options.enableAutoPlayPlugin&&this.bind(BookReader.eventNames.stop,(function(){return i.autoStop()}))}}(BookReader.prototype.init),BookReader.prototype.bindNavigationHandlers=function(t){return function(){var e=this;if(t.call(this),this.options.enableAutoPlayPlugin){var i=this.$(".BRicon");i.filter(".play").click((function(){return e.autoToggle(),!1})),i.filter(".pause").click((function(){return e.autoToggle(),!1}))}}}(BookReader.prototype.bindNavigationHandlers),BookReader.prototype.autoToggle=function(t){var e=this;if(this.options.enableAutoPlayPlugin){var i=n.extend({flipSpeed:this.flipSpeed,flipDelay:this.flipDelay},t);this.flipSpeed="number"==typeof i.flipSpeed?i.flipSpeed:this.flipSpeed,this.flipDelay="number"==typeof i.flipDelay?i.flipDelay:this.flipDelay,this.trigger(BookReader.eventNames.stop);var o=!1;this.constMode2up!=this.mode&&(o=!0,this.switchMode(this.constMode2up)),null==this.autoTimer?("rl"==this.pageProgression&&o||this.next({triggerStop:!1}),this.$(".play").hide(),this.$(".pause").show(),this.autoTimer=setInterval((function(){e.animating||(Math.max(e.twoPage.currentIndexL,e.twoPage.currentIndexR)>=e.book.getNumLeafs()-1?e.prev({triggerStop:!1}):e.next({triggerStop:!1}))}),this.flipDelay)):this.autoStop()}},BookReader.prototype.autoStop=function(){this.options.enableAutoPlayPlugin&&null!=this.autoTimer&&(clearInterval(this.autoTimer),this.flipSpeed="fast",this.$(".pause").hide(),this.$(".play").show(),this.autoTimer=null)}}},function(t){t(t.s=2024)}]);
+(self["webpackChunk_internetarchive_bookreader"] = self["webpackChunk_internetarchive_bookreader"] || []).push([["plugins/plugin.autoplay.js"],{
+
+/***/ "./src/plugins/plugin.autoplay.js":
+/*!****************************************!*\
+  !*** ./src/plugins/plugin.autoplay.js ***!
+  \****************************************/
+/***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
+
+/* provided dependency */ var jQuery = __webpack_require__(/*! jquery */ "jquery");
+/* provided dependency */ var $ = __webpack_require__(/*! jquery */ "jquery");
+/*global BookReader */
+
+/**
+ * Plugin which adds an autoplay feature. Useful for kiosk situations.
+ */
+jQuery.extend(BookReader.defaultOptions, {
+  enableAutoPlayPlugin: true
+});
+
+/**
+ * @override BookReader.setup
+ */
+BookReader.prototype.setup = function (super_) {
+  return function (options) {
+    super_.call(this, options);
+    this.auto = false;
+    this.autoTimer = null;
+    this.flipDelay = 5000;
+  };
+}(BookReader.prototype.setup);
+
+/**
+ * @override BookReader.init
+ */
+BookReader.prototype.init = function (super_) {
+  return function (options) {
+    super_.call(this, options);
+    if (!this.options.enableAutoPlayPlugin) return;
+    this.bind(BookReader.eventNames.stop, () => this.autoStop());
+  };
+}(BookReader.prototype.init);
+
+/**
+ * @override BookReader.bindNavigationHandlers
+ */
+BookReader.prototype.bindNavigationHandlers = function (super_) {
+  return function () {
+    super_.call(this);
+    if (!this.options.enableAutoPlayPlugin) return;
+    const jIcons = this.$('.BRicon');
+    jIcons.filter('.play').click(() => {
+      this.autoToggle();
+      return false;
+    });
+    jIcons.filter('.pause').click(() => {
+      this.autoToggle();
+      return false;
+    });
+  };
+}(BookReader.prototype.bindNavigationHandlers);
+
+/**
+ * Starts autoplay mode
+ * @param {object} overrides
+ * @param {number} overrides.flipSpeed
+ * @param {number} overrides.flipDelay
+ */
+BookReader.prototype.autoToggle = function (overrides) {
+  if (!this.options.enableAutoPlayPlugin) return;
+  const options = $.extend({
+    flipSpeed: this.flipSpeed,
+    flipDelay: this.flipDelay
+  }, overrides);
+  this.flipSpeed = typeof options.flipSpeed === "number" ? options.flipSpeed : this.flipSpeed;
+  this.flipDelay = typeof options.flipDelay === "number" ? options.flipDelay : this.flipDelay;
+  this.trigger(BookReader.eventNames.stop);
+  let bComingFrom1up = false;
+  if (this.constMode2up != this.mode) {
+    bComingFrom1up = true;
+    this.switchMode(this.constMode2up);
+  }
+  if (null == this.autoTimer) {
+    // $$$ Draw events currently cause layout problems when they occur during animation.
+    //     There is a specific problem when changing from 1-up immediately to autoplay in RTL so
+    //     we workaround for now by not triggering immediate animation in that case.
+    //     See https://bugs.launchpad.net/gnubook/+bug/328327
+    if ('rl' == this.pageProgression && bComingFrom1up) {
+      // don't flip immediately -- wait until timer fires
+    } else {
+      // flip immediately
+      this.next({
+        triggerStop: false
+      });
+    }
+    this.$('.play').hide();
+    this.$('.pause').show();
+    this.autoTimer = setInterval(() => {
+      if (this.animating) return;
+      if (Math.max(this.twoPage.currentIndexL, this.twoPage.currentIndexR) >= this.book.getNumLeafs() - 1) {
+        this.prev({
+          triggerStop: false
+        }); // $$$ really what we want?
+      } else {
+        this.next({
+          triggerStop: false
+        });
+      }
+    }, this.flipDelay);
+  } else {
+    this.autoStop();
+  }
+};
+
+/**
+ * Stop autoplay mode, allowing animations to finish
+ */
+BookReader.prototype.autoStop = function () {
+  if (!this.options.enableAutoPlayPlugin) return;
+  if (null != this.autoTimer) {
+    clearInterval(this.autoTimer);
+    this.flipSpeed = 'fast';
+    this.$('.pause').hide();
+    this.$('.play').show();
+    this.autoTimer = null;
+  }
+};
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__("./src/plugins/plugin.autoplay.js"));
+/******/ }
+]);
 //# sourceMappingURL=plugin.autoplay.js.map

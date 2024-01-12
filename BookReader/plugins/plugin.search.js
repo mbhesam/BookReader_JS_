@@ -1,3 +1,966 @@
-/*! For license information please see plugin.search.js.LICENSE.txt */
-"use strict";(self.webpackChunk_internetarchive_bookreader=self.webpackChunk_internetarchive_bookreader||[]).push([[73],{2225:function(e,t,r){r(4043),r(1514),r(5728),r(228),r(886),r(7267),r(4338),r(429),r(3964),r(6585),r(939),r(752),r(1694),r(6265),r(9307),r(9749),r(6544),r(4254),r(8373),r(6793),r(7629),r(7509),r(8052),r(7522),r(4284),r(3374),r(9730),r(2826),r(7049);var n=r(5685),a=r(9860),o=(r(2320),r(9373),r(9903),r(9288),r(5311));function i(e){return i="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},i(e)}function s(e,t){for(var r=0;r<t.length;r++){var n=t[r];n.enumerable=n.enumerable||!1,n.configurable=!0,"value"in n&&(n.writable=!0),Object.defineProperty(e,(void 0,a=function(e,t){if("object"!==i(e)||null===e)return e;var r=e[Symbol.toPrimitive];if(void 0!==r){var n=r.call(e,"string");if("object"!==i(n))return n;throw new TypeError("@@toPrimitive must return a primitive value.")}return String(e)}(n.key),"symbol"===i(a)?a:String(a)),n)}var a}var c=function(){function e(t){var r=t.br,n=t.searchCancelledCallback,a=void 0===n?function(){}:n;!function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,e),this.br=r,this.matches=[],this.cacheDOMElements(),this.bindEvents(),this.cancelSearch=a}var t,r;return t=e,r=[{key:"cacheDOMElements",value:function(){this.dom={},this.dom.toolbarSearch=this.buildToolbarSearch()}},{key:"setQuery",value:function(e){this.br.$('[name="query"]').val(e)}},{key:"emptyMatches",value:function(){this.matches=[]}},{key:"removeResultPins",value:function(){this.br.$(".BRnavpos .BRsearch").remove()}},{key:"clearSearchFieldAndResults",value:function(){var e=!(arguments.length>0&&void 0!==arguments[0])||arguments[0];this.br.removeSearchResults(),this.removeResultPins(),this.emptyMatches(),this.setQuery(""),this.teardownSearchNavigation(),e&&this.br.trigger("SearchResultsCleared")}},{key:"toggleSidebar",value:function(){this.br.trigger("ToggleSearchMenu")}},{key:"renderSearchNavigation",value:function(){var e="BRsearch-navigation";o(".BRnav").before('\n      <div class="'.concat(e,'">\n        <button class="toggle-sidebar">\n          <h4>\n            <span class="icon icon-search"></span> Results\n          </h4>\n        </button>\n        <div class="pagination">\n          <button class="prev" title="Previous result"><span class="icon icon-chevron hflip"></span></button>\n          <span data-id="resultsCount">').concat(this.resultsPosition(),'</span>\n          <button class="next" title="Next result"><span class="icon icon-chevron"></button>\n        </div>\n        <button class="clear" title="Clear search results">\n          <span class="icon icon-close"></span>\n        </button>\n      </div>\n    ')),this.dom.searchNavigation=o(".".concat(e))}},{key:"resultsPosition",value:function(){var e="".concat(this.matches.length," result").concat(1===this.matches.length?"":"s");return~this.currentMatchIndex&&(e="".concat(this.currentMatchIndex+1," / ").concat(this.matches.length)),e}},{key:"bindSearchNavigationEvents",value:function(){if(this.dom.searchNavigation){var e="searchNavigation";this.dom.searchNavigation.on("click.".concat(e),".clear",this.clearSearchFieldAndResults.bind(this)).on("click.".concat(e),".prev",this.showPrevResult.bind(this)).on("click.".concat(e),".next",this.showNextResult.bind(this)).on("click.".concat(e),".toggle-sidebar",this.toggleSidebar.bind(this)).on("click.".concat(e),!1)}}},{key:"showPrevResult",value:function(){0!==this.currentMatchIndex&&(this.br.mode===this.br.constModeThumb&&this.br.switchMode(this.br.constMode1up),~this.currentMatchIndex||(this.currentMatchIndex=this.getClosestMatchIndex((function(e,t,r){return t[0]>r}))+1),this.br.$(".BRnavline .BRsearch").eq(--this.currentMatchIndex).click(),this.updateResultsPosition(),this.updateSearchNavigationButtons())}},{key:"showNextResult",value:function(){this.currentMatchIndex+1!==this.matches.length&&(this.br.mode===this.br.constModeThumb&&this.br.switchMode(this.br.constMode1up),~this.currentMatchIndex||(this.currentMatchIndex=this.getClosestMatchIndex((function(e,t,r){return e[e.length-1]>r}))-1),this.br.$(".BRnavline .BRsearch").eq(++this.currentMatchIndex).click(),this.updateResultsPosition(),this.updateSearchNavigationButtons())}},{key:"getClosestMatchIndex",value:function(e){var t=function t(r,n){if(1===r.length)return r[0];var a=r.slice(0,r.length/2),o=r.slice(r.length/2);return t(e(a,o,n)?a:o,n)}(this.matches.map((function(e){return e.par[0].page})),this.br.currentIndex()+1);return this.matches.indexOf(this.matches.find((function(e){return e.par[0].page===t})))}},{key:"updateResultsPosition",value:function(){this.dom.searchNavigation&&this.dom.searchNavigation.find("[data-id=resultsCount]").text(this.resultsPosition())}},{key:"updateSearchNavigationButtons",value:function(){this.dom.searchNavigation&&(this.dom.searchNavigation.find(".prev").attr("disabled",!this.currentMatchIndex),this.dom.searchNavigation.find(".next").attr("disabled",this.currentMatchIndex+1===this.matches.length))}},{key:"teardownSearchNavigation",value:function(){this.dom.searchNavigation||(this.dom.searchNavigation=o(".BRsearch-navigation")),this.dom.searchNavigation.length&&(this.dom.searchNavigation.off(".searchNavigation").remove(),this.dom.searchNavigation=null,this.br.resize())}},{key:"setCurrentMatchIndex",value:function(){var e;this.br.mode!==this.br.constModeThumb?(e=this.br.mode===this.br.constMode2up?this.find2upMatchingSearchResult():this.find1upMatchingSearchResult(),this.currentMatchIndex=this.matches.indexOf(e)):this.currentMatchIndex=-1}},{key:"find1upMatchingSearchResult",value:function(){var e=this;return this.matches.find((function(t){return e.br.currentIndex()===t.par[0].page-1}))}},{key:"find2upMatchingSearchResult",value:function(){var e=this;return this.matches.find((function(t){return e.br._isIndexDisplayed(t.par[0].page-1)}))}},{key:"updateSearchNavigation",value:function(){this.matches.length&&(this.setCurrentMatchIndex(),this.updateResultsPosition(),this.updateSearchNavigationButtons())}},{key:"togglePinsFor",value:function(e){var t=e?"visible":"hidden";this.br.refs.$BRfooter.find(".BRsearch").css({visibility:t})}},{key:"buildToolbarSearch",value:function(){var e=document.createElement("span");return e.classList.add("BRtoolbarSection","BRtoolbarSectionSearch"),e.innerHTML='\n      <form class="BRbooksearch desktop">\n        <input type="search" name="query" class="BRsearchInput" value="" placeholder="Search inside"/>\n        <button type="submit" class="BRsearchSubmit">\n          <img src="'.concat(this.br.imagesBaseURL,'icon_search_button.svg" />\n        </button>\n      </form>\n    '),e}},{key:"renderPins",value:function(e){var t=this;e.forEach((function(e){var r=t.br.book.leafNumToIndex(e.par[0].page),n=t.br.constructor.util.cssPercentage(r,t.br.book.getNumLeafs()-1),a=e.html;if(a.length>200){var i=Math.max(0,a.indexOf("<mark>")-100);0!=i&&(a="…"+e.html.substring(i).replace(/^\S+/,""))}o("<div>").addClass("BRsearch").css({left:n}).attr("title","Search result").append('\n          <div class="BRquery">\n            <main>'.concat(a,"</main>\n            <footer>Page ").concat(e.displayPageNumber,"</footer>\n          </div>\n        ")).appendTo(t.br.$(".BRnavline")).on("mouseenter",(function(e){var t=e.currentTarget,r=t.querySelector(".BRquery"),n=r.getBoundingClientRect(),a=t.getBoundingClientRect(),i=2*parseInt(getComputedStyle(r).paddingLeft);n.x-i<0&&r.style.setProperty("transform","translateX(-".concat(a.left-i,"px)")),o(".BRsearch,.BRchapter").removeClass("front"),o(e.target).addClass("front")})).on("mouseleave",(function(e){return o(e.target).removeClass("front")})).on("click",(function(){t.br._searchPluginGoToResult(e.matchIndex)}))}))}},{key:"toggleSearchPending",value:function(e){var t=this;e?this.br.showProgressPopup("Search results will appear below...",(function(){return t.progressPopupClosed()})):this.br.removeProgressPopup()}},{key:"progressPopupClosed",value:function(){this.toggleSearchPending(),this.cancelSearch()}},{key:"renderErrorModal",value:function(){var e="".concat(arguments.length>0&&void 0!==arguments[0]&&arguments[0]?"":"The text may still be processing. ","Please try again.");this.renderModalMessage("\n      Sorry, there was an error with your search.\n      <br />\n      ".concat(e,"\n    ")),this.delayModalRemovalFor(4e3)}},{key:"renderBookNotIndexedModal",value:function(){this.renderModalMessage("\n      <p>\n         This book hasn't been indexed for searching yet.\n         We've just started indexing it, so search should be available soon.\n         <br />\n         Please try again later. Thanks!\n      </p>\n    "),this.delayModalRemovalFor(5e3)}},{key:"renderResultsEmptyModal",value:function(){this.renderModalMessage("No matches were found."),this.delayModalRemovalFor(2e3)}},{key:"renderModalMessage",value:function(e){var t=document.createElement("div");t.classList.add("BRprogresspopup","search_modal"),t.innerHTML=e,document.querySelector(this.br.el).append(t)}},{key:"delayModalRemovalFor",value:function(e){setTimeout(this.br.removeProgressPopup.bind(this.br),e)}},{key:"submitHandler",value:function(e){e.preventDefault();var t=e.target.querySelector('[name="query"]').value;return!!t.length&&(this.br.search(t),this.emptyMatches(),this.toggleSearchPending(!0),!1)}},{key:"handleSearchCallback",value:function(e,t){var r=this,n=t.results,a=t.options;this.matches=n.matches,this.setCurrentMatchIndex(),this.teardownSearchNavigation(),this.renderSearchNavigation(),this.bindSearchNavigationEvents(),this.renderPins(n.matches),this.toggleSearchPending(!1),a.goToFirstResult?o(document).one("BookReader:pageChanged",(function(){r.br.resize()})):this.br.resize()}},{key:"handleSearchStarted",value:function(){this.emptyMatches(),this.br.removeSearchHilites(),this.removeResultPins(),this.toggleSearchPending(!0),this.teardownSearchNavigation(),this.setQuery(this.br.searchTerm)}},{key:"handleSearchCallbackError",value:function(){var e,t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};this.toggleSearchPending(!1);var r=null==t||null===(e=t.detail)||void 0===e||null===(e=e.props)||void 0===e||null===(e=e.results)||void 0===e?void 0:e.indexed;this.renderErrorModal(r)}},{key:"handleSearchCallbackBookNotIndexed",value:function(){this.toggleSearchPending(!1),this.renderBookNotIndexedModal()}},{key:"handleSearchCallbackEmpty",value:function(){this.toggleSearchPending(!1),this.renderResultsEmptyModal()}},{key:"bindEvents",value:function(){var e="BookReader:";window.addEventListener("".concat(e,"SearchCallbackError"),this.handleSearchCallbackError.bind(this)),o(document).on("".concat(e,"SearchCallback"),this.handleSearchCallback.bind(this)).on("".concat(e,"SearchStarted"),this.handleSearchStarted.bind(this)).on("".concat(e,"SearchCallbackBookNotIndexed"),this.handleSearchCallbackBookNotIndexed.bind(this)).on("".concat(e,"SearchCallbackEmpty"),this.handleSearchCallbackEmpty.bind(this)).on("".concat(e,"pageChanged"),this.updateSearchNavigation.bind(this)),this.dom.toolbarSearch.querySelector("form").addEventListener("submit",this.submitHandler.bind(this))}}],r&&s(t.prototype,r),Object.defineProperty(t,"prototype",{writable:!1}),e}(),h=c;function l(e,t){var r="undefined"!=typeof Symbol&&e[Symbol.iterator]||e["@@iterator"];if(!r){if(Array.isArray(e)||(r=u(e))||t&&e&&"number"==typeof e.length){r&&(e=r);var n=0,a=function(){};return{s:a,n:function(){return n>=e.length?{done:!0}:{done:!1,value:e[n++]}},e:function(e){throw e},f:a}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,i=!0,s=!1;return{s:function(){r=r.call(e)},n:function(){var e=r.next();return i=e.done,e},e:function(e){s=!0,o=e},f:function(){try{i||null==r.return||r.return()}finally{if(s)throw o}}}}function u(e,t){if(e){if("string"==typeof e)return d(e,t);var r=Object.prototype.toString.call(e).slice(8,-1);return"Object"===r&&e.constructor&&(r=e.constructor.name),"Map"===r||"Set"===r?Array.from(e):"Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)?d(e,t):void 0}}function d(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=new Array(t);r<t;r++)n[r]=e[r];return n}function f(e,t,r){var a=(0,n.escapeRegExp)((0,n.escapeHTML)(t)),o=(0,n.escapeRegExp)((0,n.escapeHTML)(r)),i=new RegExp("".concat(a,"([^]+?)").concat(o),"g");return(0,n.escapeHTML)(e).replace(i,"<mark>$1</mark>").replace(/(\b)- /g,"$1")}r(2003);var p,v=r(5311),g=r(5311);function m(e){return m="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},m(e)}function y(e,t){var r="undefined"!=typeof Symbol&&e[Symbol.iterator]||e["@@iterator"];if(!r){if(Array.isArray(e)||(r=b(e))||t&&e&&"number"==typeof e.length){r&&(e=r);var n=0,a=function(){};return{s:a,n:function(){return n>=e.length?{done:!0}:{done:!1,value:e[n++]}},e:function(e){throw e},f:a}}throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}var o,i=!0,s=!1;return{s:function(){r=r.call(e)},n:function(){var e=r.next();return i=e.done,e},e:function(e){s=!0,o=e},f:function(){try{i||null==r.return||r.return()}finally{if(s)throw o}}}}function b(e,t){if(e){if("string"==typeof e)return k(e,t);var r=Object.prototype.toString.call(e).slice(8,-1);return"Object"===r&&e.constructor&&(r=e.constructor.name),"Map"===r||"Set"===r?Array.from(e):"Arguments"===r||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)?k(e,t):void 0}}function k(e,t){(null==t||t>e.length)&&(t=e.length);for(var r=0,n=new Array(t);r<t;r++)n[r]=e[r];return n}function S(){S=function(){return t};var e,t={},r=Object.prototype,n=r.hasOwnProperty,a=Object.defineProperty||function(e,t,r){e[t]=r.value},o="function"==typeof Symbol?Symbol:{},i=o.iterator||"@@iterator",s=o.asyncIterator||"@@asyncIterator",c=o.toStringTag||"@@toStringTag";function h(e,t,r){return Object.defineProperty(e,t,{value:r,enumerable:!0,configurable:!0,writable:!0}),e[t]}try{h({},"")}catch(e){h=function(e,t,r){return e[t]=r}}function l(e,t,r,n){var o=t&&t.prototype instanceof y?t:y,i=Object.create(o.prototype),s=new N(n||[]);return a(i,"_invoke",{value:C(e,r,s)}),i}function u(e,t,r){try{return{type:"normal",arg:e.call(t,r)}}catch(e){return{type:"throw",arg:e}}}t.wrap=l;var d="suspendedStart",f="suspendedYield",p="executing",v="completed",g={};function y(){}function b(){}function k(){}var x={};h(x,i,(function(){return this}));var R=Object.getPrototypeOf,w=R&&R(R(L([])));w&&w!==r&&n.call(w,i)&&(x=w);var P=k.prototype=y.prototype=Object.create(x);function I(e){["next","throw","return"].forEach((function(t){h(e,t,(function(e){return this._invoke(t,e)}))}))}function B(e,t){function r(a,o,i,s){var c=u(e[a],e,o);if("throw"!==c.type){var h=c.arg,l=h.value;return l&&"object"==m(l)&&n.call(l,"__await")?t.resolve(l.__await).then((function(e){r("next",e,i,s)}),(function(e){r("throw",e,i,s)})):t.resolve(l).then((function(e){h.value=e,i(h)}),(function(e){return r("throw",e,i,s)}))}s(c.arg)}var o;a(this,"_invoke",{value:function(e,n){function a(){return new t((function(t,a){r(e,n,t,a)}))}return o=o?o.then(a,a):a()}})}function C(t,r,n){var a=d;return function(o,i){if(a===p)throw new Error("Generator is already running");if(a===v){if("throw"===o)throw i;return{value:e,done:!0}}for(n.method=o,n.arg=i;;){var s=n.delegate;if(s){var c=M(s,n);if(c){if(c===g)continue;return c}}if("next"===n.method)n.sent=n._sent=n.arg;else if("throw"===n.method){if(a===d)throw a=v,n.arg;n.dispatchException(n.arg)}else"return"===n.method&&n.abrupt("return",n.arg);a=p;var h=u(t,r,n);if("normal"===h.type){if(a=n.done?v:f,h.arg===g)continue;return{value:h.arg,done:n.done}}"throw"===h.type&&(a=v,n.method="throw",n.arg=h.arg)}}}function M(t,r){var n=r.method,a=t.iterator[n];if(a===e)return r.delegate=null,"throw"===n&&t.iterator.return&&(r.method="return",r.arg=e,M(t,r),"throw"===r.method)||"return"!==n&&(r.method="throw",r.arg=new TypeError("The iterator does not provide a '"+n+"' method")),g;var o=u(a,t.iterator,r.arg);if("throw"===o.type)return r.method="throw",r.arg=o.arg,r.delegate=null,g;var i=o.arg;return i?i.done?(r[t.resultName]=i.value,r.next=t.nextLoc,"return"!==r.method&&(r.method="next",r.arg=e),r.delegate=null,g):i:(r.method="throw",r.arg=new TypeError("iterator result is not an object"),r.delegate=null,g)}function T(e){var t={tryLoc:e[0]};1 in e&&(t.catchLoc=e[1]),2 in e&&(t.finallyLoc=e[2],t.afterLoc=e[3]),this.tryEntries.push(t)}function E(e){var t=e.completion||{};t.type="normal",delete t.arg,e.completion=t}function N(e){this.tryEntries=[{tryLoc:"root"}],e.forEach(T,this),this.reset(!0)}function L(t){if(t||""===t){var r=t[i];if(r)return r.call(t);if("function"==typeof t.next)return t;if(!isNaN(t.length)){var a=-1,o=function r(){for(;++a<t.length;)if(n.call(t,a))return r.value=t[a],r.done=!1,r;return r.value=e,r.done=!0,r};return o.next=o}}throw new TypeError(m(t)+" is not iterable")}return b.prototype=k,a(P,"constructor",{value:k,configurable:!0}),a(k,"constructor",{value:b,configurable:!0}),b.displayName=h(k,c,"GeneratorFunction"),t.isGeneratorFunction=function(e){var t="function"==typeof e&&e.constructor;return!!t&&(t===b||"GeneratorFunction"===(t.displayName||t.name))},t.mark=function(e){return Object.setPrototypeOf?Object.setPrototypeOf(e,k):(e.__proto__=k,h(e,c,"GeneratorFunction")),e.prototype=Object.create(P),e},t.awrap=function(e){return{__await:e}},I(B.prototype),h(B.prototype,s,(function(){return this})),t.AsyncIterator=B,t.async=function(e,r,n,a,o){void 0===o&&(o=Promise);var i=new B(l(e,r,n,a),o);return t.isGeneratorFunction(r)?i:i.next().then((function(e){return e.done?e.value:i.next()}))},I(P),h(P,c,"Generator"),h(P,i,(function(){return this})),h(P,"toString",(function(){return"[object Generator]"})),t.keys=function(e){var t=Object(e),r=[];for(var n in t)r.push(n);return r.reverse(),function e(){for(;r.length;){var n=r.pop();if(n in t)return e.value=n,e.done=!1,e}return e.done=!0,e}},t.values=L,N.prototype={constructor:N,reset:function(t){if(this.prev=0,this.next=0,this.sent=this._sent=e,this.done=!1,this.delegate=null,this.method="next",this.arg=e,this.tryEntries.forEach(E),!t)for(var r in this)"t"===r.charAt(0)&&n.call(this,r)&&!isNaN(+r.slice(1))&&(this[r]=e)},stop:function(){this.done=!0;var e=this.tryEntries[0].completion;if("throw"===e.type)throw e.arg;return this.rval},dispatchException:function(t){if(this.done)throw t;var r=this;function a(n,a){return s.type="throw",s.arg=t,r.next=n,a&&(r.method="next",r.arg=e),!!a}for(var o=this.tryEntries.length-1;o>=0;--o){var i=this.tryEntries[o],s=i.completion;if("root"===i.tryLoc)return a("end");if(i.tryLoc<=this.prev){var c=n.call(i,"catchLoc"),h=n.call(i,"finallyLoc");if(c&&h){if(this.prev<i.catchLoc)return a(i.catchLoc,!0);if(this.prev<i.finallyLoc)return a(i.finallyLoc)}else if(c){if(this.prev<i.catchLoc)return a(i.catchLoc,!0)}else{if(!h)throw new Error("try statement without catch or finally");if(this.prev<i.finallyLoc)return a(i.finallyLoc)}}}},abrupt:function(e,t){for(var r=this.tryEntries.length-1;r>=0;--r){var a=this.tryEntries[r];if(a.tryLoc<=this.prev&&n.call(a,"finallyLoc")&&this.prev<a.finallyLoc){var o=a;break}}o&&("break"===e||"continue"===e)&&o.tryLoc<=t&&t<=o.finallyLoc&&(o=null);var i=o?o.completion:{};return i.type=e,i.arg=t,o?(this.method="next",this.next=o.finallyLoc,g):this.complete(i)},complete:function(e,t){if("throw"===e.type)throw e.arg;return"break"===e.type||"continue"===e.type?this.next=e.arg:"return"===e.type?(this.rval=this.arg=e.arg,this.method="return",this.next="end"):"normal"===e.type&&t&&(this.next=t),g},finish:function(e){for(var t=this.tryEntries.length-1;t>=0;--t){var r=this.tryEntries[t];if(r.finallyLoc===e)return this.complete(r.completion,r.afterLoc),E(r),g}},catch:function(e){for(var t=this.tryEntries.length-1;t>=0;--t){var r=this.tryEntries[t];if(r.tryLoc===e){var n=r.completion;if("throw"===n.type){var a=n.arg;E(r)}return a}}throw new Error("illegal catch attempt")},delegateYield:function(t,r,n){return this.delegate={iterator:L(t),resultName:r,nextLoc:n},"next"===this.method&&(this.arg=e),g}},t}function x(e,t,r,n,a,o,i){try{var s=e[o](i),c=s.value}catch(e){return void r(e)}s.done?t(c):Promise.resolve(c).then(n,a)}function R(e){return function(){var t=this,r=arguments;return new Promise((function(n,a){var o=e.apply(t,r);function i(e){x(o,n,a,i,s,"next",e)}function s(e){x(o,n,a,i,s,"throw",e)}i(void 0)}))}}v.extend(BookReader.defaultOptions,{server:"ia600609.us.archive.org",bookId:"",subPrefix:"",bookPath:"",enableSearch:!0,searchInsideProtocol:"https",searchInsideUrl:"/fulltext/inside.php",searchInsidePreTag:"{{{",searchInsidePostTag:"}}}",initialSearchTerm:null}),BookReader.prototype.setup=(p=BookReader.prototype.setup,function(e){p.call(this,e),this.searchTerm="",this.searchResults=null,this.searchInsideUrl=e.searchInsideUrl,this.enableSearch=e.enableSearch,this.bookId=e.bookId,this.server=e.server,this.subPrefix=e.subPrefix,this.bookPath=e.bookPath,this.searchXHR=null,this._cancelSearch.bind(this),this.cancelSearchRequest.bind(this),this._searchBoxesByIndex={},this.searchView=void 0}),BookReader.prototype.init=function(e){return function(){var t=this;e.call(this),this.searchView=new h({br:this,searchCancelledCallback:function(){t._cancelSearch(),t.trigger("SearchCanceled",{term:t.searchTerm,instance:t})}}),this.options.enableSearch&&this.options.initialSearchTerm&&this.search(this.options.initialSearchTerm,{goToFirstResult:this.options.goToFirstResult,suppressFragmentChange:!1})}}(BookReader.prototype.init),BookReader.prototype.buildToolbarElement=function(e){return function(){var t=e.call(this);if(this.enableSearch)return this.searchView.dom.toolbarSearch&&t.find(".BRtoolbarSectionInfo").after(this.searchView.dom.toolbarSearch),t}}(BookReader.prototype.buildToolbarElement),BookReader.prototype._createPageContainer=function(e){return function(t){var r=e.call(this,t);if(this.enableSearch&&r.page&&t in this._searchBoxesByIndex){var n=r.page.index,o=this._searchBoxesByIndex[n];(0,a.Tm)("searchHiliteLayer",o,r.page,r.$container[0],o.map((function(e){return"match-index-".concat(e.matchIndex)})))}return r}}(BookReader.prototype._createPageContainer),BookReader.prototype.search=R(S().mark((function e(){var t,r,n,a,o,i,s,c,h,l,u,d,f=this,p=arguments;return S().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:return t=p.length>0&&void 0!==p[0]?p[0]:"",r=p.length>1&&void 0!==p[1]?p[1]:{},n={goToFirstResult:!1,disablePopup:!1,suppressFragmentChange:!1,error:null,success:null},a=v.extend({},n,r),this.suppressFragmentChange=a.suppressFragmentChange,this.searchCancelled=!1,this.searchTerm=t.replace(/\//g," "),a.suppressFragmentChange||this.trigger(BookReader.eventNames.fragmentChange),o=this.server.replace(/:.+/,""),i="".concat(this.options.searchInsideProtocol,"://").concat(o).concat(this.searchInsideUrl,"?"),s=this.bookPath,c="/".concat(this.subPrefix),this.bookPath.length-this.bookPath.lastIndexOf(c)==c.length&&(s=this.bookPath.substr(0,this.bookPath.length-c.length)),h={item_id:this.bookId,doc:this.subPrefix,path:s,q:t,pre_tag:this.options.searchInsidePreTag,post_tag:this.options.searchInsidePostTag},l=g.param(h).replace(/%2F/g,"/"),u="".concat(i).concat(l),d=function(e){if(!f.searchCancelled){var t=e.error||!e.matches.length,r="function"==typeof a.error,n="function"==typeof a.success;t?(console.error("Search Inside Response Error",e.error||"matches.length == 0"),r?a.error.call(f,e,a):f.BRSearchCallbackError(e,a)):n?a.success.call(f,e,a):f.BRSearchCallback(e,a)}},this.trigger("SearchStarted",{term:this.searchTerm,instance:this}),e.t0=d,e.next=21,g.ajax({url:u,dataType:"jsonp",cache:!0,beforeSend:function(e){f.searchXHR=e}});case 21:e.t1=e.sent,(0,e.t0)(e.t1);case 23:case"end":return e.stop()}}),e,this)}))),BookReader.prototype._cancelSearch=function(){var e;null===(e=this.searchXHR)||void 0===e||e.abort(),this.searchView.clearSearchFieldAndResults(!1),this.searchTerm="",this.searchXHR=null,this.searchCancelled=!0,this.searchResults=[]},BookReader.prototype.cancelSearchRequest=function(){this.searchCancelled=!0,null!==this.searchXHR&&(this._cancelSearch(),this.searchView.toggleSearchPending(),this.trigger("SearchCanceled",{term:this.searchTerm,instance:this}))},BookReader.prototype.BRSearchCallback=function(e,t){var r=this;!function(e,t,n,a){var o,i,s,c,h=l(e.matches.entries());try{for(h.s();!(o=h.n()).done;){var d=(s=o.value,c=2,function(e){if(Array.isArray(e))return e}(s)||function(e,t){var r=null==e?null:"undefined"!=typeof Symbol&&e[Symbol.iterator]||e["@@iterator"];if(null!=r){var n,a,o,i,s=[],c=!0,h=!1;try{if(o=(r=r.call(e)).next,0===t){if(Object(r)!==r)return;c=!1}else for(;!(c=(n=o.call(r)).done)&&(s.push(n.value),s.length!==t);c=!0);}catch(e){h=!0,a=e}finally{try{if(!c&&null!=r.return&&(i=r.return(),Object(i)!==i))return}finally{if(h)throw a}}return s}}(s,c)||u(s,c)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()),p=d[0],v=d[1];v.matchIndex=p,v.displayPageNumber=(i=v.par[0].page,r.book.getPageNum(r.book.leafNumToIndex(i))),v.html=f(v.text,n,a);var g,m=l(v.par);try{for(m.s();!(g=m.n()).done;){var y,b=l(g.value.boxes);try{for(b.s();!(y=b.n()).done;)y.value.matchIndex=p}catch(e){b.e(e)}finally{b.f()}}}catch(e){m.e(e)}finally{m.f()}}}catch(e){h.e(e)}finally{h.f()}}(e,0,this.options.searchInsidePreTag,this.options.searchInsidePostTag),this.searchResults=e||[],this.updateSearchHilites(),this.removeProgressPopup(),t.goToFirstResult&&this._searchPluginGoToResult(0),this.trigger("SearchCallback",{results:e,options:t,instance:this})},BookReader.prototype.BRSearchCallbackError=function(e){this._BRSearchCallbackError(e)},BookReader.prototype._BRSearchCallbackError=function(e){this.searchResults=e;var t={term:this.searchTerm,instance:this};if(e.error){var r=Object.assign({},t,{results:e});this.trigger("SearchCallbackError",r)}else if(0==e.matches.length){if(!1===e.indexed)return void this.trigger("SearchCallbackBookNotIndexed",t);this.trigger("SearchCallbackEmpty",t)}},BookReader.prototype.updateSearchHilites=function(){var e,t=(null===(e=this.searchResults)||void 0===e?void 0:e.matches)||[],r={};this.removeSearchHilites();var n,o,i,s=y(t);try{for(s.s();!(n=s.n()).done;){var c,h=y(n.value.par[0].boxes);try{for(h.s();!(c=h.n()).done;){var l=c.value,u=this.book.leafNumToIndex(l.page);(r[u]||(r[u]=[])).push(l)}}catch(e){h.e(e)}finally{h.f()}}}catch(e){s.e(e)}finally{s.f()}for(var d=0,f=Object.entries(r);d<f.length;d++){var p,v=(o=f[d],i=2,function(e){if(Array.isArray(e))return e}(o)||function(e,t){var r=null==e?null:"undefined"!=typeof Symbol&&e[Symbol.iterator]||e["@@iterator"];if(null!=r){var n,a,o,i,s=[],c=!0,h=!1;try{if(o=(r=r.call(e)).next,0===t){if(Object(r)!==r)return;c=!1}else for(;!(c=(n=o.call(r)).done)&&(s.push(n.value),s.length!==t);c=!0);}catch(e){h=!0,a=e}finally{try{if(!c&&null!=r.return&&(i=r.return(),Object(i)!==i))return}finally{if(h)throw a}}return s}}(o,i)||b(o,i)||function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}()),g=v[0],m=v[1],k=parseFloat(g),S=this.book.getPage(k),x=y(this.getActivePageContainerElementsForIndex(k));try{for(x.s();!(p=x.n()).done;){var R=p.value;(0,a.Tm)("searchHiliteLayer",m,S,R,m.map((function(e){return"match-index-".concat(e.matchIndex)})))}}catch(e){x.e(e)}finally{x.f()}}this._searchBoxesByIndex=r},BookReader.prototype.removeSearchHilites=function(){g(this.getActivePageContainerElements()).find(".searchHiliteLayer").remove()},BookReader.prototype._searchPluginGoToResult=function(){var e=R(S().mark((function e(t){var r,a,o,i,s,c,h,l,u,d,f,p;return S().wrap((function(e){for(;;)switch(e.prev=e.next){case 0:if(a=null===(r=this.searchResults)||void 0===r?void 0:r.matches[t],o=this.book,i=o.leafNumToIndex(a.par[0].page),s=o.getPage(i),c=Math.abs(this.currentIndex()-i)<3,h=!1,s.isViewable){e.next=17;break}return e.next=9,fetch("/services/bookreader/request_page?"+new URLSearchParams({id:this.options.bookId,subprefix:this.options.subPrefix,leafNum:s.leafNum})).then((function(e){return e.json()}));case 9:l=e.sent,u=y(l.value);try{for(u.s();!(d=u.n()).done;)f=d.value,o.getPage(o.leafNumToIndex(f)).makeViewable()}catch(e){u.e(e)}finally{u.f()}if(l.value.length||(o.getPage(i).makeViewable(),h=!0),this._modes.mode1Up.mode1UpLit.updatePages(),this.activeMode!=this._modes.mode1Up){e.next=17;break}return e.next=17,this._modes.mode1Up.mode1UpLit.updateComplete;case 17:return this._isIndexDisplayed(i)||(this.suppressFragmentChange=!1,this.jumpToIndex(i)),h&&o.getPage(i).makeViewable(!1),e.next=21,(0,n.poll)((function(){return g("rect.match-index-".concat(a.matchIndex))}),{until:function(e){return e.length>0}});case 21:if(!(p=e.sent).length){e.next=28;break}return p.css("animation","none"),p[0].scrollIntoView({block:this.constMode1up==this.mode||this.isFullscreenActive?"center":"nearest",inline:"center",behavior:c?"smooth":"auto"}),e.next=27,new Promise((function(e){return setTimeout(e,100)}));case 27:p.removeAttr("style");case 28:case"end":return e.stop()}}),e,this)})));return function(t){return e.apply(this,arguments)}}(),BookReader.prototype.removeSearchResults=function(){var e=arguments.length>0&&void 0!==arguments[0]&&arguments[0];this.removeSearchHilites(),this.searchTerm=null,this.searchResults=null,e||this.trigger(BookReader.eventNames.fragmentChange)},BookReader.prototype.searchHighlightVisible=function(){var e=this,t=this.searchResults,r=[];if(null==t)return!1;if(this.constMode2up==this.mode)r=[this.twoPage.currentIndexL,this.twoPage.currentIndexR];else{if(this.constMode1up!=this.mode)return!1;r=[this.currentIndex()]}return t.matches.some((function(t){return t.par[0].boxes.some((function(t){var n=e.book.leafNumToIndex(t.page);if(v.inArray(n,r)>=0)return!0}))})),!1}},4818:function(e,t,r){var n=r(9037),a=r(3689),o=r(8844),i=r(4327),s=r(1435).trim,c=r(6350),h=o("".charAt),l=n.parseFloat,u=n.Symbol,d=u&&u.iterator,f=1/l(c+"-0")!=-1/0||d&&!a((function(){l(Object(d))}));e.exports=f?function(e){var t=s(i(e)),r=l(t);return 0===r&&"-"===h(t,0)?-0:r}:l},6585:function(e,t,r){var n=r(9989),a=r(9419).entries;n({target:"Object",stat:!0},{entries:function(e){return a(e)}})},939:function(e,t,r){var n=r(9989),a=r(4818);n({global:!0,forced:parseFloat!==a},{parseFloat:a})}},function(e){e(e.s=2225)}]);
+"use strict";
+(self["webpackChunk_internetarchive_bookreader"] = self["webpackChunk_internetarchive_bookreader"] || []).push([["plugins/plugin.search.js"],{
+
+/***/ "./src/plugins/search/plugin.search.js":
+/*!*********************************************!*\
+  !*** ./src/plugins/search/plugin.search.js ***!
+  \*********************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BookReader_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../BookReader/utils.js */ "./src/BookReader/utils.js");
+/* harmony import */ var _BookReader_PageContainer_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../BookReader/PageContainer.js */ "./src/BookReader/PageContainer.js");
+/* harmony import */ var _view_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./view.js */ "./src/plugins/search/view.js");
+/* harmony import */ var _utils_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils.js */ "./src/plugins/search/utils.js");
+/* provided dependency */ var jQuery = __webpack_require__(/*! jquery */ "jquery");
+/* provided dependency */ var $ = __webpack_require__(/*! jquery */ "jquery");
+// @ts-check
+/* global BookReader */
+/**
+ * Plugin for Archive.org book search
+ * Events fired at various points throughout search processing are published
+ * on the document DOM element. These can be subscribed to using jQuery's event
+ * binding method `$.fn.on`. All of the events are prefixed with a BookReader
+ * namespace. The events are:
+ *
+ * @event BookReader:SearchStarted - When a search form is submitted, immediately
+ *   before an AJAX call is made to request search results
+ * @event BookReader:SearchCallback - When the search AJAX call is returned and at
+ *   least one result is returned. The event callback receives an object
+ *   with the `results`, plugin `options`, and the BookReader `instance`
+ * @event BookReader:SearchCallbackError - When the AJAX request returns an error.
+ *   Receives the `results` and `instance`
+ * @event BookReader:SearchCallbackNotIndexed - When a message is received that
+ *   the book has not had OCR text indexed yet. Receives `instance`
+ * @event BookReader:SearchCallbackEmpty - When no results found. Receives
+ *   `instance`
+ * @event BookReader:SearchCanceled - When no results found. Receives
+ *   `instance`
+ */
+
+
+
+
+/** @typedef {import('../../BookReader/PageContainer').PageContainer} PageContainer */
+/** @typedef {import('../../BookReader/BookModel').PageIndex} PageIndex */
+/** @typedef {import('../../BookReader/BookModel').LeafNum} LeafNum */
+/** @typedef {import('../../BookReader/BookModel').PageNumString} PageNumString */
+
+jQuery.extend(BookReader.defaultOptions, {
+  server: 'ia600609.us.archive.org',
+  bookId: '',
+  subPrefix: '',
+  bookPath: '',
+  enableSearch: true,
+  searchInsideProtocol: 'https',
+  searchInsideUrl: '/fulltext/inside.php',
+  searchInsidePreTag: '{{{',
+  searchInsidePostTag: '}}}',
+  initialSearchTerm: null
+});
+
+/** @override */
+BookReader.prototype.setup = function (super_) {
+  return function (options) {
+    super_.call(this, options);
+    this.searchTerm = '';
+    this.searchResults = null;
+    this.searchInsideUrl = options.searchInsideUrl;
+    this.enableSearch = options.enableSearch;
+
+    // Base server used by some api calls
+    this.bookId = options.bookId;
+    this.server = options.server;
+    this.subPrefix = options.subPrefix;
+    this.bookPath = options.bookPath;
+    this.searchXHR = null;
+    this._cancelSearch.bind(this);
+    this.cancelSearchRequest.bind(this);
+
+    /** @type { {[pageIndex: number]: SearchInsideMatchBox[]} } */
+    this._searchBoxesByIndex = {};
+    this.searchView = undefined;
+  };
+}(BookReader.prototype.setup);
+
+/** @override */
+BookReader.prototype.init = function (super_) {
+  return function () {
+    super_.call(this);
+    // give SearchView the most complete bookreader state
+    this.searchView = new _view_js__WEBPACK_IMPORTED_MODULE_2__["default"]({
+      br: this,
+      searchCancelledCallback: () => {
+        this._cancelSearch();
+        this.trigger('SearchCanceled', {
+          term: this.searchTerm,
+          instance: this
+        });
+      }
+    });
+    if (this.options.enableSearch && this.options.initialSearchTerm) {
+      /**
+       * this.search() take two parameter
+       * 1. this.options.initialSearchTerm - search term
+       * 2. {
+       *  goToFirstResult: this.options.goToFirstResult,
+       *  suppressFragmentChange: false // always want to change fragment in URL
+       * }
+       */
+      this.search(this.options.initialSearchTerm, {
+        goToFirstResult: this.options.goToFirstResult,
+        suppressFragmentChange: false
+      });
+    }
+  };
+}(BookReader.prototype.init);
+
+/** @override */
+BookReader.prototype.buildToolbarElement = function (super_) {
+  return function () {
+    const $el = super_.call(this);
+    if (!this.enableSearch) {
+      return;
+    }
+    if (this.searchView.dom.toolbarSearch) {
+      $el.find('.BRtoolbarSectionInfo').after(this.searchView.dom.toolbarSearch);
+    }
+    return $el;
+  };
+}(BookReader.prototype.buildToolbarElement);
+
+/** @override */
+BookReader.prototype._createPageContainer = function (super_) {
+  return function (index) {
+    const pageContainer = super_.call(this, index);
+    if (this.enableSearch && pageContainer.page && index in this._searchBoxesByIndex) {
+      const pageIndex = pageContainer.page.index;
+      const boxes = this._searchBoxesByIndex[pageIndex];
+      (0,_BookReader_PageContainer_js__WEBPACK_IMPORTED_MODULE_1__.renderBoxesInPageContainerLayer)('searchHiliteLayer', boxes, pageContainer.page, pageContainer.$container[0], boxes.map(b => `match-index-${b.matchIndex}`));
+    }
+    return pageContainer;
+  };
+}(BookReader.prototype._createPageContainer);
+
+/**
+ * @typedef {object} SearchOptions
+ * @property {boolean} goToFirstResult
+ * @property {boolean} disablePopup
+ * @property {(null|function)} error - @deprecated at v.5.0
+ * @property {(null|function)} success - @deprecated at v.5.0
+ */
+
+/**
+ * Submits search request
+ *
+ * @param {string} term
+ * @param {SearchOptions} overrides
+ */
+BookReader.prototype.search = async function (term = '', overrides = {}) {
+  /** @type {SearchOptions} */
+  const defaultOptions = {
+    goToFirstResult: false,
+    /* jump to the first result (default=false) */
+    disablePopup: false,
+    /* don't show the modal progress (default=false) */
+    suppressFragmentChange: false,
+    /* don't change the URL on initial load */
+    error: null,
+    /* optional error handler (default=null) */
+    success: null /* optional success handler (default=null) */
+  };
+
+  const options = jQuery.extend({}, defaultOptions, overrides);
+  this.suppressFragmentChange = options.suppressFragmentChange;
+  this.searchCancelled = false;
+
+  // strip slashes, since this goes in the url
+  this.searchTerm = term.replace(/\//g, ' ');
+  if (!options.suppressFragmentChange) {
+    this.trigger(BookReader.eventNames.fragmentChange);
+  }
+
+  // Add quotes to the term. This is to compenstate for the backends default OR query
+  // term = term.replace(/['"]+/g, '');
+  // term = '"' + term + '"';
+
+  // Remove the port and userdir
+  const serverPath = this.server.replace(/:.+/, '');
+  const baseUrl = `${this.options.searchInsideProtocol}://${serverPath}${this.searchInsideUrl}?`;
+
+  // Remove subPrefix from end of path
+  let path = this.bookPath;
+  const subPrefixWithSlash = `/${this.subPrefix}`;
+  if (this.bookPath.length - this.bookPath.lastIndexOf(subPrefixWithSlash) == subPrefixWithSlash.length) {
+    path = this.bookPath.substr(0, this.bookPath.length - subPrefixWithSlash.length);
+  }
+  const urlParams = {
+    item_id: this.bookId,
+    doc: this.subPrefix,
+    path,
+    q: term,
+    pre_tag: this.options.searchInsidePreTag,
+    post_tag: this.options.searchInsidePostTag
+  };
+
+  // NOTE that the API does not expect / (slashes) to be encoded. (%2F) won't work
+  const paramStr = $.param(urlParams).replace(/%2F/g, '/');
+  const url = `${baseUrl}${paramStr}`;
+  const callSearchResultsCallback = searchInsideResults => {
+    if (this.searchCancelled) {
+      return;
+    }
+    const responseHasError = searchInsideResults.error || !searchInsideResults.matches.length;
+    const hasCustomError = typeof options.error === 'function';
+    const hasCustomSuccess = typeof options.success === 'function';
+    if (responseHasError) {
+      console.error('Search Inside Response Error', searchInsideResults.error || 'matches.length == 0');
+      hasCustomError ? options.error.call(this, searchInsideResults, options) : this.BRSearchCallbackError(searchInsideResults, options);
+    } else {
+      hasCustomSuccess ? options.success.call(this, searchInsideResults, options) : this.BRSearchCallback(searchInsideResults, options);
+    }
+  };
+  this.trigger('SearchStarted', {
+    term: this.searchTerm,
+    instance: this
+  });
+  callSearchResultsCallback(await $.ajax({
+    url: url,
+    dataType: 'jsonp',
+    cache: true,
+    beforeSend: xhr => {
+      this.searchXHR = xhr;
+    }
+  }));
+};
+
+/**
+ * cancels AJAX Call
+ * emits custom event
+ */
+BookReader.prototype._cancelSearch = function () {
+  this.searchXHR?.abort();
+  this.searchView.clearSearchFieldAndResults(false);
+  this.searchTerm = '';
+  this.searchXHR = null;
+  this.searchCancelled = true;
+  this.searchResults = [];
+};
+
+/**
+ * External function to cancel search
+ * checks for term & xhr in flight before running
+ */
+BookReader.prototype.cancelSearchRequest = function () {
+  this.searchCancelled = true;
+  if (this.searchXHR !== null) {
+    this._cancelSearch();
+    this.searchView.toggleSearchPending();
+    this.trigger('SearchCanceled', {
+      term: this.searchTerm,
+      instance: this
+    });
+  }
+};
+
+/**
+  * @typedef {object} SearchInsideMatchBox
+  * @property {number} page
+  * @property {number} r
+  * @property {number} l
+  * @property {number} b
+  * @property {number} t
+  * @property {HTMLDivElement} [div]
+  * @property {number} matchIndex This is a fake field! not part of the API response. The index of the match that contains this box in total search results matches.
+  */
+
+/**
+ * @typedef {object} SearchInsideMatch
+ * @property {number} matchIndex This is a fake field! Not part of the API response. It is added by the JS.
+ * @property {string} displayPageNumber (fake field) The page number as it should be displayed in the UI.
+ * @property {string} html (computed field) The html-escaped raw html to display in the UI.
+ * @property {string} text
+ * @property {Array<{ page: number, boxes: SearchInsideMatchBox[] }>} par
+ */
+
+/**
+ * @typedef {object} SearchInsideResults
+ * @property {string} error
+ * @property {SearchInsideMatch[]} matches
+ * @property {boolean} indexed
+ */
+
+/**
+ * Search Results return handler
+ * @param {SearchInsideResults} results
+ * @param {object} options
+ * @param {boolean} options.goToFirstResult
+ */
+BookReader.prototype.BRSearchCallback = function (results, options) {
+  (0,_utils_js__WEBPACK_IMPORTED_MODULE_3__.marshallSearchResults)(results, pageNum => this.book.getPageNum(this.book.leafNumToIndex(pageNum)), this.options.searchInsidePreTag, this.options.searchInsidePostTag);
+  this.searchResults = results || [];
+  this.updateSearchHilites();
+  this.removeProgressPopup();
+  if (options.goToFirstResult) {
+    this._searchPluginGoToResult(0);
+  }
+  this.trigger('SearchCallback', {
+    results,
+    options,
+    instance: this
+  });
+};
+
+/**
+ * Main search results error handler
+ * @callback
+ * @param {SearchInsideResults} results
+ */
+BookReader.prototype.BRSearchCallbackError = function (results) {
+  this._BRSearchCallbackError(results);
+};
+
+/**
+ * @private draws search results error
+ * @callback
+ * @param {SearchInsideResults} results
+ * @param {jQuery} $el
+ * @param {boolean} fade
+ */
+BookReader.prototype._BRSearchCallbackError = function (results) {
+  this.searchResults = results;
+  const basePayload = {
+    term: this.searchTerm,
+    instance: this
+  };
+  if (results.error) {
+    const payload = Object.assign({}, basePayload, {
+      results
+    });
+    this.trigger('SearchCallbackError', payload);
+  } else if (0 == results.matches.length) {
+    if (false === results.indexed) {
+      this.trigger('SearchCallbackBookNotIndexed', basePayload);
+      return;
+    }
+    this.trigger('SearchCallbackEmpty', basePayload);
+  }
+};
+
+/**
+ * updates search on-page highlights controller
+ */
+BookReader.prototype.updateSearchHilites = function () {
+  /** @type {SearchInsideMatch[]} */
+  const matches = this.searchResults?.matches || [];
+  /** @type { {[pageIndex: number]: SearchInsideMatchBox[]} } */
+  const boxesByIndex = {};
+
+  // Clear any existing svg layers
+  this.removeSearchHilites();
+
+  // Group by pageIndex
+  for (const match of matches) {
+    for (const box of match.par[0].boxes) {
+      const pageIndex = this.book.leafNumToIndex(box.page);
+      const pageBoxes = boxesByIndex[pageIndex] || (boxesByIndex[pageIndex] = []);
+      pageBoxes.push(box);
+    }
+  }
+
+  // update any already created pages
+  for (const [pageIndexString, boxes] of Object.entries(boxesByIndex)) {
+    const pageIndex = parseFloat(pageIndexString);
+    const page = this.book.getPage(pageIndex);
+    const pageContainers = this.getActivePageContainerElementsForIndex(pageIndex);
+    for (const container of pageContainers) {
+      (0,_BookReader_PageContainer_js__WEBPACK_IMPORTED_MODULE_1__.renderBoxesInPageContainerLayer)('searchHiliteLayer', boxes, page, container, boxes.map(b => `match-index-${b.matchIndex}`));
+    }
+  }
+  this._searchBoxesByIndex = boxesByIndex;
+};
+
+/**
+ * remove search highlights
+ */
+BookReader.prototype.removeSearchHilites = function () {
+  $(this.getActivePageContainerElements()).find('.searchHiliteLayer').remove();
+};
+
+/**
+ * @private
+ * Goes to the page specified. If the page is not viewable, tries to load the page
+ * FIXME Most of this logic is IA specific, and should be less integrated into here
+ * or at least more configurable.
+ * @param {number} matchIndex
+ */
+BookReader.prototype._searchPluginGoToResult = async function (matchIndex) {
+  const match = this.searchResults?.matches[matchIndex];
+  const book = this.book;
+  const pageIndex = book.leafNumToIndex(match.par[0].page);
+  const page = book.getPage(pageIndex);
+  const onNearbyPage = Math.abs(this.currentIndex() - pageIndex) < 3;
+  let makeUnviewableAtEnd = false;
+  if (!page.isViewable) {
+    const resp = await fetch('/services/bookreader/request_page?' + new URLSearchParams({
+      id: this.options.bookId,
+      subprefix: this.options.subPrefix,
+      leafNum: page.leafNum
+    })).then(r => r.json());
+    for (const leafNum of resp.value) {
+      book.getPage(book.leafNumToIndex(leafNum)).makeViewable();
+    }
+
+    // not able to show page; make the page viewable anyways so that it can
+    // actually open. On IA, it has a fallback to a special error page.
+    if (!resp.value.length) {
+      book.getPage(pageIndex).makeViewable();
+      makeUnviewableAtEnd = true;
+    }
+
+    // Trigger an update of book
+    this._modes.mode1Up.mode1UpLit.updatePages();
+    if (this.activeMode == this._modes.mode1Up) {
+      await this._modes.mode1Up.mode1UpLit.updateComplete;
+    }
+  }
+  /* this updates the URL */
+  if (!this._isIndexDisplayed(pageIndex)) {
+    this.suppressFragmentChange = false;
+    this.jumpToIndex(pageIndex);
+  }
+
+  // Reset it to unviewable if it wasn't resolved
+  if (makeUnviewableAtEnd) {
+    book.getPage(pageIndex).makeViewable(false);
+  }
+
+  // Scroll/flash in the ui
+  const $boxes = await (0,_BookReader_utils_js__WEBPACK_IMPORTED_MODULE_0__.poll)(() => $(`rect.match-index-${match.matchIndex}`), {
+    until: result => result.length > 0
+  });
+  if ($boxes.length) {
+    $boxes.css('animation', 'none');
+    $boxes[0].scrollIntoView({
+      // Only vertically center the highlight if we're in 1up or in full screen. In
+      // 2up, if we're not fullscreen, the whole body gets scrolled around to try to
+      // center the highlight 🙄 See:
+      // https://stackoverflow.com/questions/11039885/scrollintoview-causing-the-whole-page-to-move/11041376
+      // Note: nearest doesn't quite work great, because the ReadAloud toolbar is now
+      // full-width, and covers up the last line of the highlight.
+      block: this.constMode1up == this.mode || this.isFullscreenActive ? 'center' : 'nearest',
+      inline: 'center',
+      behavior: onNearbyPage ? 'smooth' : 'auto'
+    });
+    // wait for animation to start
+    await new Promise(resolve => setTimeout(resolve, 100));
+    $boxes.removeAttr("style");
+  }
+};
+
+/**
+ * Removes all search pins
+ */
+BookReader.prototype.removeSearchResults = function (suppressFragmentChange = false) {
+  this.removeSearchHilites(); //be sure to set all box.divs to null
+  this.searchTerm = null;
+  this.searchResults = null;
+  if (!suppressFragmentChange) {
+    this.trigger(BookReader.eventNames.fragmentChange);
+  }
+};
+
+/**
+ * Returns true if a search highlight is currently being displayed
+ * @returns {boolean}
+ */
+BookReader.prototype.searchHighlightVisible = function () {
+  const results = this.searchResults;
+  let visiblePages = [];
+  if (null == results) return false;
+  if (this.constMode2up == this.mode) {
+    visiblePages = [this.twoPage.currentIndexL, this.twoPage.currentIndexR];
+  } else if (this.constMode1up == this.mode) {
+    visiblePages = [this.currentIndex()];
+  } else {
+    return false;
+  }
+  results.matches.some(match => {
+    return match.par[0].boxes.some(box => {
+      const pageIndex = this.book.leafNumToIndex(box.page);
+      if (jQuery.inArray(pageIndex, visiblePages) >= 0) {
+        return true;
+      }
+    });
+  });
+  return false;
+};
+
+/***/ }),
+
+/***/ "./src/plugins/search/utils.js":
+/*!*************************************!*\
+  !*** ./src/plugins/search/utils.js ***!
+  \*************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   marshallSearchResults: function() { return /* binding */ marshallSearchResults; },
+/* harmony export */   renderMatch: function() { return /* binding */ renderMatch; }
+/* harmony export */ });
+/* harmony import */ var _BookReader_utils_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../BookReader/utils.js */ "./src/BookReader/utils.js");
+
+
+/**
+ * @param {string} match
+ * @param {string} preTag
+ * @param {string} postTag
+ * @returns {string}
+ */
+function renderMatch(match, preTag, postTag) {
+  // Search results are returned as a text blob with the hits wrapped in
+  // triple mustaches. Hits occasionally include text beyond the search
+  // term, so everything within the staches is captured and wrapped.
+  const preTagRe = (0,_BookReader_utils_js__WEBPACK_IMPORTED_MODULE_0__.escapeRegExp)((0,_BookReader_utils_js__WEBPACK_IMPORTED_MODULE_0__.escapeHTML)(preTag));
+  const postTagRe = (0,_BookReader_utils_js__WEBPACK_IMPORTED_MODULE_0__.escapeRegExp)((0,_BookReader_utils_js__WEBPACK_IMPORTED_MODULE_0__.escapeHTML)(postTag));
+  // [^] matches any character, including line breaks
+  const regex = new RegExp(`${preTagRe}([^]+?)${postTagRe}`, 'g');
+  return (0,_BookReader_utils_js__WEBPACK_IMPORTED_MODULE_0__.escapeHTML)(match).replace(regex, '<mark>$1</mark>')
+  // Fix trailing hyphens. This over-corrects but is net useful.
+  .replace(/(\b)- /g, '$1');
+}
+
+/**
+ * Attach some fields to search inside results
+ * @param {SearchInsideResults} results
+ * @param {(pageNum: LeafNum) => PageNumString} displayPageNumberFn
+ * @param {string} preTag
+ * @param {string} postTag
+ */
+function marshallSearchResults(results, displayPageNumberFn, preTag, postTag) {
+  // Attach matchIndex to a few things to make it easier to identify
+  // an active/selected match
+  for (const [index, match] of results.matches.entries()) {
+    match.matchIndex = index;
+    match.displayPageNumber = displayPageNumberFn(match.par[0].page);
+    match.html = renderMatch(match.text, preTag, postTag);
+    for (const par of match.par) {
+      for (const box of par.boxes) {
+        box.matchIndex = index;
+      }
+    }
+  }
+}
+
+/***/ }),
+
+/***/ "./src/plugins/search/view.js":
+/*!************************************!*\
+  !*** ./src/plugins/search/view.js ***!
+  \************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+__webpack_require__.r(__webpack_exports__);
+/* provided dependency */ var $ = __webpack_require__(/*! jquery */ "jquery");
+class SearchView {
+  /**
+   * @param {object} params
+   * @param {object} params.br The BookReader instance
+   * @param {function} params.cancelSearch callback when a user wants to cancel search
+   *
+   * @event BookReader:SearchResultsCleared - when the search results nav gets cleared
+   * @event BookReader:ToggleSearchMenu - when search results menu should toggle
+   */
+  constructor({
+    br,
+    searchCancelledCallback = () => {}
+  }) {
+    this.br = br;
+    this.matches = [];
+    this.cacheDOMElements();
+    this.bindEvents();
+    this.cancelSearch = searchCancelledCallback;
+  }
+  cacheDOMElements() {
+    this.dom = {};
+    // Search input within the top toolbar. Will be removed once the mobile menu is replaced.
+    this.dom.toolbarSearch = this.buildToolbarSearch();
+  }
+
+  /**
+   * @param {string} query
+   */
+  setQuery(query) {
+    this.br.$('[name="query"]').val(query);
+  }
+  emptyMatches() {
+    this.matches = [];
+  }
+  removeResultPins() {
+    this.br.$('.BRnavpos .BRsearch').remove();
+  }
+  clearSearchFieldAndResults(dispatchEventWhenComplete = true) {
+    this.br.removeSearchResults();
+    this.removeResultPins();
+    this.emptyMatches();
+    this.setQuery('');
+    this.teardownSearchNavigation();
+    if (dispatchEventWhenComplete) {
+      this.br.trigger('SearchResultsCleared');
+    }
+  }
+  toggleSidebar() {
+    this.br.trigger('ToggleSearchMenu');
+  }
+  renderSearchNavigation() {
+    const selector = 'BRsearch-navigation';
+    $('.BRnav').before(`
+      <div class="${selector}">
+        <button class="toggle-sidebar">
+          <h4>
+            <span class="icon icon-search"></span> Results
+          </h4>
+        </button>
+        <div class="pagination">
+          <button class="prev" title="Previous result"><span class="icon icon-chevron hflip"></span></button>
+          <span data-id="resultsCount">${this.resultsPosition()}</span>
+          <button class="next" title="Next result"><span class="icon icon-chevron"></button>
+        </div>
+        <button class="clear" title="Clear search results">
+          <span class="icon icon-close"></span>
+        </button>
+      </div>
+    `);
+    this.dom.searchNavigation = $(`.${selector}`);
+  }
+  resultsPosition() {
+    let positionMessage = `${this.matches.length} result${this.matches.length === 1 ? '' : 's'}`;
+    if (~this.currentMatchIndex) {
+      positionMessage = `${this.currentMatchIndex + 1} / ${this.matches.length}`;
+    }
+    return positionMessage;
+  }
+  bindSearchNavigationEvents() {
+    if (!this.dom.searchNavigation) {
+      return;
+    }
+    const namespace = 'searchNavigation';
+    this.dom.searchNavigation.on(`click.${namespace}`, '.clear', this.clearSearchFieldAndResults.bind(this)).on(`click.${namespace}`, '.prev', this.showPrevResult.bind(this)).on(`click.${namespace}`, '.next', this.showNextResult.bind(this)).on(`click.${namespace}`, '.toggle-sidebar', this.toggleSidebar.bind(this)).on(`click.${namespace}`, false);
+  }
+  showPrevResult() {
+    if (this.currentMatchIndex === 0) {
+      return;
+    }
+    if (this.br.mode === this.br.constModeThumb) {
+      this.br.switchMode(this.br.constMode1up);
+    }
+    if (!~this.currentMatchIndex) {
+      this.currentMatchIndex = this.getClosestMatchIndex((start, end, comparator) => end[0] > comparator) + 1;
+    }
+    this.br.$('.BRnavline .BRsearch').eq(--this.currentMatchIndex).click();
+    this.updateResultsPosition();
+    this.updateSearchNavigationButtons();
+  }
+  showNextResult() {
+    if (this.currentMatchIndex + 1 === this.matches.length) {
+      return;
+    }
+    if (this.br.mode === this.br.constModeThumb) {
+      this.br.switchMode(this.br.constMode1up);
+    }
+    if (!~this.currentMatchIndex) {
+      this.currentMatchIndex = this.getClosestMatchIndex((start, end, comparator) => start[start.length - 1] > comparator) - 1;
+    }
+    this.br.$('.BRnavline .BRsearch').eq(++this.currentMatchIndex).click();
+    this.updateResultsPosition();
+    this.updateSearchNavigationButtons();
+  }
+
+  /**
+   * Obtains closest match based on the logical comparison function passed in.
+   * When the comparison function returns true, the starting (left) half of the
+   * matches array is used in the binary split, else the ending (right) half is
+   * used. A recursive call is made to perform the same split and comparison
+   * on the winning half of the matches. This is traditionally known as binary
+   * search (https://en.wikipedia.org/wiki/Binary_search_algorithm), and in
+   * most cases (medium to large search result arrays) should outperform
+   * traversing the array from start to finish. In the case of small arrays,
+   * the speed difference is negligible.
+   *
+   * @param {function} comparisonFn
+   * @return {number} matchIndex
+   */
+  getClosestMatchIndex(comparisonFn) {
+    const matchPages = this.matches.map(m => m.par[0].page);
+    const currentPage = this.br.currentIndex() + 1;
+    const closestTo = (pool, comparator) => {
+      if (pool.length === 1) {
+        return pool[0];
+      }
+      const start = pool.slice(0, pool.length / 2);
+      const end = pool.slice(pool.length / 2);
+      return closestTo(comparisonFn(start, end, comparator) ? start : end, comparator);
+    };
+    const closestPage = closestTo(matchPages, currentPage);
+    return this.matches.indexOf(this.matches.find(m => m.par[0].page === closestPage));
+  }
+  updateResultsPosition() {
+    if (!this.dom.searchNavigation) return;
+    this.dom.searchNavigation.find('[data-id=resultsCount]').text(this.resultsPosition());
+  }
+  updateSearchNavigationButtons() {
+    if (!this.dom.searchNavigation) return;
+    this.dom.searchNavigation.find('.prev').attr('disabled', !this.currentMatchIndex);
+    this.dom.searchNavigation.find('.next').attr('disabled', this.currentMatchIndex + 1 === this.matches.length);
+  }
+  teardownSearchNavigation() {
+    if (!this.dom.searchNavigation) {
+      this.dom.searchNavigation = $('.BRsearch-navigation');
+    }
+    if (!this.dom.searchNavigation.length) {
+      return;
+    }
+    this.dom.searchNavigation.off('.searchNavigation').remove();
+    this.dom.searchNavigation = null;
+    this.br.resize();
+  }
+  setCurrentMatchIndex() {
+    let matchingSearchResult;
+    if (this.br.mode === this.br.constModeThumb) {
+      this.currentMatchIndex = -1;
+      return;
+    }
+    if (this.br.mode === this.br.constMode2up) {
+      matchingSearchResult = this.find2upMatchingSearchResult();
+    } else {
+      matchingSearchResult = this.find1upMatchingSearchResult();
+    }
+    this.currentMatchIndex = this.matches.indexOf(matchingSearchResult);
+  }
+  find1upMatchingSearchResult() {
+    return this.matches.find(m => this.br.currentIndex() === m.par[0].page - 1);
+  }
+  find2upMatchingSearchResult() {
+    return this.matches.find(m => this.br._isIndexDisplayed(m.par[0].page - 1));
+  }
+  updateSearchNavigation() {
+    if (!this.matches.length) {
+      return;
+    }
+    this.setCurrentMatchIndex();
+    this.updateResultsPosition();
+    this.updateSearchNavigationButtons();
+  }
+
+  /**
+   * @param {boolean} bool
+   */
+  togglePinsFor(bool) {
+    const pinsVisibleState = bool ? 'visible' : 'hidden';
+    this.br.refs.$BRfooter.find('.BRsearch').css({
+      visibility: pinsVisibleState
+    });
+  }
+  buildToolbarSearch() {
+    const toolbarSearch = document.createElement('span');
+    toolbarSearch.classList.add('BRtoolbarSection', 'BRtoolbarSectionSearch');
+    toolbarSearch.innerHTML = `
+      <form class="BRbooksearch desktop">
+        <input type="search" name="query" class="BRsearchInput" value="" placeholder="Search inside"/>
+        <button type="submit" class="BRsearchSubmit">
+          <img src="${this.br.imagesBaseURL}icon_search_button.svg" />
+        </button>
+      </form>
+    `;
+    return toolbarSearch;
+  }
+
+  /**
+   * @param {array} matches
+   */
+  renderPins(matches) {
+    matches.forEach(match => {
+      const pageIndex = this.br.book.leafNumToIndex(match.par[0].page);
+      const uiStringSearch = "Search result"; // i18n
+      const percentThrough = this.br.constructor.util.cssPercentage(pageIndex, this.br.book.getNumLeafs() - 1);
+      let html = match.html;
+      if (html.length > 200) {
+        const start = Math.max(0, html.indexOf('<mark>') - 100);
+        if (start != 0) {
+          html = '…' + match.html.substring(start)
+          // Make sure at word boundary though
+          .replace(/^\S+/, '');
+        }
+      }
+      // draw marker
+      $('<div>').addClass('BRsearch').css({
+        left: percentThrough
+      }).attr('title', uiStringSearch).append(`
+          <div class="BRquery">
+            <main>${html}</main>
+            <footer>Page ${match.displayPageNumber}</footer>
+          </div>
+        `).appendTo(this.br.$('.BRnavline')).on("mouseenter", event => {
+        // remove from other markers then turn on just for this
+        // XXX should be done when nav slider moves
+        const marker = event.currentTarget;
+        const tooltip = marker.querySelector('.BRquery');
+        const tooltipOffset = tooltip.getBoundingClientRect();
+        const targetOffset = marker.getBoundingClientRect();
+        const boxSizeAdjust = parseInt(getComputedStyle(tooltip).paddingLeft) * 2;
+        if (tooltipOffset.x - boxSizeAdjust < 0) {
+          tooltip.style.setProperty('transform', `translateX(-${targetOffset.left - boxSizeAdjust}px)`);
+        }
+        $('.BRsearch,.BRchapter').removeClass('front');
+        $(event.target).addClass('front');
+      }).on("mouseleave", event => $(event.target).removeClass('front')).on("click", () => {
+        this.br._searchPluginGoToResult(match.matchIndex);
+      });
+    });
+  }
+
+  /**
+   * @param {boolean} bool
+   */
+  toggleSearchPending(bool) {
+    if (bool) {
+      this.br.showProgressPopup("Search results will appear below...", () => this.progressPopupClosed());
+    } else {
+      this.br.removeProgressPopup();
+    }
+  }
+
+  /**
+   * Primary callback when user cancels search popup
+   */
+  progressPopupClosed() {
+    this.toggleSearchPending();
+    this.cancelSearch();
+  }
+  renderErrorModal(textIsProcessing = false) {
+    const errorDetails = `${!textIsProcessing ? 'The text may still be processing. ' : ''}Please try again.`;
+    this.renderModalMessage(`
+      Sorry, there was an error with your search.
+      <br />
+      ${errorDetails}
+    `);
+    this.delayModalRemovalFor(4000);
+  }
+  renderBookNotIndexedModal() {
+    this.renderModalMessage(`
+      <p>
+         This book hasn't been indexed for searching yet.
+         We've just started indexing it, so search should be available soon.
+         <br />
+         Please try again later. Thanks!
+      </p>
+    `);
+    this.delayModalRemovalFor(5000);
+  }
+  renderResultsEmptyModal() {
+    this.renderModalMessage('No matches were found.');
+    this.delayModalRemovalFor(2000);
+  }
+
+  /**
+   * @param {string} messageHTML The innerHTML string used to popupate the modal contents
+   */
+  renderModalMessage(messageHTML) {
+    const modal = document.createElement('div');
+    modal.classList.add('BRprogresspopup', 'search_modal');
+    modal.innerHTML = messageHTML;
+    document.querySelector(this.br.el).append(modal);
+  }
+
+  /**
+   * @param {number} timeoutMS
+   */
+  delayModalRemovalFor(timeoutMS) {
+    setTimeout(this.br.removeProgressPopup.bind(this.br), timeoutMS);
+  }
+
+  /**
+   * @param {Event} e
+   */
+  submitHandler(e) {
+    e.preventDefault();
+    const query = e.target.querySelector('[name="query"]').value;
+    if (!query.length) {
+      return false;
+    }
+    this.br.search(query);
+    this.emptyMatches();
+    this.toggleSearchPending(true);
+    return false;
+  }
+
+  /**
+   * @param {Event} e
+   * @param {object} properties
+   *   @param {object} properties.results
+   *   @param {object} properties.options
+   */
+  handleSearchCallback(e, {
+    results,
+    options
+  }) {
+    this.matches = results.matches;
+    this.setCurrentMatchIndex();
+    this.teardownSearchNavigation();
+    this.renderSearchNavigation();
+    this.bindSearchNavigationEvents();
+    this.renderPins(results.matches);
+    this.toggleSearchPending(false);
+    if (options.goToFirstResult) {
+      $(document).one('BookReader:pageChanged', () => {
+        this.br.resize();
+      });
+    } else {
+      this.br.resize();
+    }
+  }
+  handleSearchStarted() {
+    this.emptyMatches();
+    this.br.removeSearchHilites();
+    this.removeResultPins();
+    this.toggleSearchPending(true);
+    this.teardownSearchNavigation();
+    this.setQuery(this.br.searchTerm);
+  }
+
+  /**
+   * Event listener for: `BookReader:SearchCallbackError`
+   * @param {CustomEvent} event
+   */
+  handleSearchCallbackError(event = {}) {
+    this.toggleSearchPending(false);
+    const isIndexed = event?.detail?.props?.results?.indexed;
+    this.renderErrorModal(isIndexed);
+  }
+  handleSearchCallbackBookNotIndexed() {
+    this.toggleSearchPending(false);
+    this.renderBookNotIndexedModal();
+  }
+  handleSearchCallbackEmpty() {
+    this.toggleSearchPending(false);
+    this.renderResultsEmptyModal();
+  }
+  bindEvents() {
+    const namespace = 'BookReader:';
+    window.addEventListener(`${namespace}SearchCallbackError`, this.handleSearchCallbackError.bind(this));
+    $(document).on(`${namespace}SearchCallback`, this.handleSearchCallback.bind(this)).on(`${namespace}SearchStarted`, this.handleSearchStarted.bind(this)).on(`${namespace}SearchCallbackBookNotIndexed`, this.handleSearchCallbackBookNotIndexed.bind(this)).on(`${namespace}SearchCallbackEmpty`, this.handleSearchCallbackEmpty.bind(this)).on(`${namespace}pageChanged`, this.updateSearchNavigation.bind(this));
+    this.dom.toolbarSearch.querySelector('form').addEventListener('submit', this.submitHandler.bind(this));
+  }
+}
+/* harmony default export */ __webpack_exports__["default"] = (SearchView);
+
+/***/ })
+
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ var __webpack_exports__ = (__webpack_exec__("./src/plugins/search/plugin.search.js"));
+/******/ }
+]);
 //# sourceMappingURL=plugin.search.js.map
