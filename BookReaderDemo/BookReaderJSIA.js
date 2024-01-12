@@ -293,7 +293,6 @@ window.BookReaderJSIAinit = (function() {
    * @param {Object} (optional) extraOptions
    */
   return function(jsiaResponseData, extraOptions) {
-    console.log('heeere', jsiaResponseData);
     var data = jsiaResponseData.data;
     // Ultimately, the brOptions will be passed from the server
     // and little to no processing should happen here in JS

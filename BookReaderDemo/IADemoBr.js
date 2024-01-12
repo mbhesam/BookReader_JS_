@@ -4,6 +4,7 @@
 /**
  * This is how Internet Archive loads bookreader
  */
+const apiEndpoint = 'http://api.hesamhelperdomain.ir';
 const urlParams = new URLSearchParams(window.location.search);
 
 const ocaid = urlParams.get('ocaid');
@@ -11,6 +12,17 @@ const openFullImmersionTheater = urlParams.get('view') === 'theater';
 const ui = urlParams.get('ui');
 const autoflip = urlParams.get('autoflip');
 const searchTerm = urlParams.get('q');
+
+
+const getUrlParams = () => {
+  const urlParts = "https://bookreader.hesamhelperdomain.ir/bnr/bnr10007/bnr10007-1.pdf".split('/');
+  // const urlParts = window.location.href.split('/');
+  return {
+    collection: urlParts[3],
+    entity: urlParts[4],
+    pdfName: urlParts[5]
+  }
+}
 
 const iaBookReader = document.querySelector('ia-bookreader');
 
@@ -36,8 +48,24 @@ iaBookReader.modal = modal;
 // Override options coming from IA
 BookReader.optionOverrides.imagesBaseURL = '/BookReader/images/';
 
-const initializeBookReader = (brManifest) => {
-  console.log('initializeBookReader', brManifest);
+const generateMultipleBooksData = (bookArray) => {
+  const { attachments } = bookArray;
+  let multipleBooks = {
+    by_subprefix: {}
+  }
+
+  const params = getUrlParams();
+
+  attachments.forEach(element => {
+    multipleBooks.by_subprefix[element] = {
+      url_path: `/${params.collection}/${params.entity}/${element}`,
+      title: element,
+    }
+  });
+  return multipleBooks;
+}
+
+const initializeBookReader = (brManifest, tableOfContents) => {
 
   const customAutoflipParams = {
     autoflip: !!autoflip,
@@ -66,28 +94,7 @@ const initializeBookReader = (brManifest) => {
     /* Multiple volumes */
     // To show multiple volumes:
     enableMultipleBooks: true, // turn this on
-    multipleBooksList: {
-      "by_subprefix": {
-        "test1": {
-          "url_path": "/test2",
-          "file_subprefix": "کتاب اول",
-          "orig_sort":2,
-          "title": "کتاب اول",
-        },
-        "test3": {
-          "url_path": "/test2",
-          "file_subprefix": "کتاب اول",
-          "orig_sort": 3,
-          "title": "کتاب 444",
-        },
-        "test2": {
-          "url_path": "/test2",
-          "file_subprefix": "کتاب اول",
-          "orig_sort": 1,
-          "title": "کتاب 123",
-        },
-      }
-    }, // populate this  // TODO: get sample blob and tie into demo
+    multipleBooksList: generateMultipleBooksData(tableOfContents),
     /* End multiple volumes */
     enableBookmarks: false, // turn this on
     enableFSLogoShortcut: true,
@@ -126,57 +133,19 @@ const fetchBookManifestAndInitializeBookreader = async () => {
   // if (jp2File) {
   //   jsiaParams.subPrefix = jp2File.name.replace('_jp2.zip', '');
   // }
-  const iaManifestUrl = `http://api.hesamhelperdomain.ir/api/bookreader/bnr/bnr10007/bnr10007-1.pdf`
-  // const iaManifestUrl = `https://ia800900.us.archive.org/BookReader/BookReaderJSIA.php?format=jsonp&itemPath=%2F25%2Fitems%2Ftheworksofplato01platiala&id=theworksofplato01platiala&server=ia800900.us.archive.org&subPrefix=theworksofplato01platiala`;
 
+  const urlParams = getUrlParams();
+
+  const iaManifestUrl = `${apiEndpoint}/api/bookreader/${urlParams.collection}/${urlParams.entity}/${urlParams.pdfName}`
   const manifest = await fetch(iaManifestUrl).then(response => response.json());
 
-  const contentListUrl = `http://api.hesamhelperdomain.ir/api/show_attachments/bnr/bnr100/`
+  const contentListUrl = `${apiEndpoint}/api/show_attachments/${urlParams.collection}/${urlParams.entity}/`
   const tableOfContent = await fetch(contentListUrl).then(response => response.json());
   
   // initializeBookReader({brOptions: manifest.data.brOptions});
   initializeBookReader({brOptions: {
-    ...manifest,
-    // "lendingInfo": {},
-    // "imagesBaseURL": "https://esm.archive.org/@internetarchive/bookreader@5.0.0-77/BookReader/images/",
-    // "enableExperimentalControls": true,
-    // "enablePageResume": true,
-    // "el": "#BookReader",
-    // "enableBookTitleLink": false,
-    // "bookUrlText": null,
-    // "startFullscreen": false,
-    // "initialSearchTerm": "",
-    // "showToolbar": false,
-    // "enableMultipleBooks": false,
-    // "multipleBooksList": [],
-    // "enableBookmarks": false,
-    // "enableFSLogoShortcut": true,
-    "enableChaptersPlugin": false,
-    // "table_of_contents": tableOfContent.attachments
-    // "bookPath": "/25/items/theworksofplato01platiala/theworksofplato01platiala",
-    // "imageFormat": "jp2",
-    // "server": "ia800900.us.archive.org",
-    // "subPrefix": "theworksofplato01platiala",
-    // "zip": "/25/items/theworksofplato01platiala/theworksofplato01platiala_jp2.zip",
-    // "bookTitle": "The works of Plato : a new and literal version, chiefly from the text of Stallbaum",
-    // "ppi": "400",
-    // "titleLeaf": 1,
-    // "coverLeaf": 1,
-    // "defaultStartLeaf": 1,
-    // "pageProgression": "lr",
-    // "vars": {
-    //     "bookId": "theworksofplato01platiala",
-    //     "bookPath": "/25/items/theworksofplato01platiala/theworksofplato01platiala",
-    //     "server": "ia800900.us.archive.org",
-    //     "subPrefix": "theworksofplato01platiala"
-    // },
-    // "plugins": {
-    //     "textSelection": {
-    //         "enabled": true,
-    //         "singlePageDjvuXmlUrl": "https://{{server}}/BookReader/BookReaderGetTextWrapper.php?path={{bookPath|urlencode}}_djvu.xml&mode=djvu_xml&page={{pageIndex}}"
-    //     }
-    // },
-  }});
+    ...manifest
+  }}, tableOfContent);
   // initializeBookReader(manifest);
 };
 
