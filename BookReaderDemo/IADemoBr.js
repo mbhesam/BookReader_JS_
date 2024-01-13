@@ -15,7 +15,7 @@ const searchTerm = urlParams.get('q');
 
 
 const getUrlParams = () => {
-  const urlParts = "https://bookreader.hesamhelperdomain.ir/bnr/bnr10007/bnr10007-1.pdf".split('/');
+  const urlParts = window.location.href.split('/');
   // const urlParts = window.location.href.split('/');
   return {
     collection: urlParts[3],
