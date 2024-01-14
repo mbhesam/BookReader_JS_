@@ -141,7 +141,7 @@ export class BookNavigator extends LitElement {
    */
   get baseProviderConfig() {
     return  {
-      baseHost: window.location.origin,
+      baseHost: window.location.host,
       modal: this.modal,
       sharedObserver: this.sharedObserver,
       bookreader: this.bookreader,
@@ -174,7 +174,6 @@ export class BookNavigator extends LitElement {
       //   },
       // }),
     };
-    console.log('heeeeere', this.shouldShowDownloadsMenu());
     if (this.shouldShowDownloadsMenu()) {
       providers.downloads = new DownloadProvider(this.baseProviderConfig);
     }

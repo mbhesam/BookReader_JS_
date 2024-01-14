@@ -5975,7 +5975,7 @@ class BookNavigator extends lit__WEBPACK_IMPORTED_MODULE_2__.LitElement {
    */
   get baseProviderConfig() {
     return {
-      baseHost: window.location.origin,
+      baseHost: window.location.host,
       modal: this.modal,
       sharedObserver: this.sharedObserver,
       bookreader: this.bookreader,
@@ -6007,7 +6007,6 @@ class BookNavigator extends lit__WEBPACK_IMPORTED_MODULE_2__.LitElement {
       //   },
       // }),
     };
-    console.log('heeeeere', this.shouldShowDownloadsMenu());
     if (this.shouldShowDownloadsMenu()) {
       providers.downloads = new _downloads_downloads_provider_js__WEBPACK_IMPORTED_MODULE_4__["default"](this.baseProviderConfig);
     }
