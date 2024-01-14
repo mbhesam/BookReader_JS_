@@ -14,9 +14,8 @@ const autoflip = urlParams.get('autoflip');
 const searchTerm = urlParams.get('q');
 
 
-const getUrlParams = () => {
+const getUrlParams = () => {4
   const urlParts = window.location.href.split('/');
-  // const urlParts = window.location.href.split('/');
   return {
     collection: urlParts[3],
     entity: urlParts[4],
@@ -40,7 +39,12 @@ BookReader.optionOverrides.imagesBaseURL = '/BookReader/images/';
 const generateMultipleBooksData = (bookArray) => {
   const { attachments } = bookArray;
   let multipleBooks = {
-    by_subprefix: {}
+    by_subprefix: {
+      "test" : {
+        url_path: `/asdasdw`,
+        title: 'asdwd',
+      }
+    }
   }
 
   const params = getUrlParams();
@@ -162,3 +166,24 @@ window.logError = function(e) {
 };
 
 fetchBookManifestAndInitializeBookreader()
+
+window.addEventListener("BookReader:PostInit", function(event) {
+  setTimeout(() => {
+    selectItem()
+  }, 100)
+});
+
+function selectItem() {
+  const urlParams = getUrlParams();
+
+  const layout = document.getElementsByTagName('ia-bookreader')
+  const items = layout[0]
+  .shadowRoot.querySelector('iaux-item-navigator')
+  .shadowRoot.querySelector('ia-menu-slider')
+  .shadowRoot.querySelector('iaux-in-viewable-files-panel')
+  .shadowRoot.querySelectorAll('.item-title')
+
+  items.forEach(item => {
+    if (item.innerText === urlParams.pdfName) item.style.color = "#09bc83"
+  })
+}
