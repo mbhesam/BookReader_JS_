@@ -39,12 +39,7 @@ BookReader.optionOverrides.imagesBaseURL = '/BookReader/images/';
 const generateMultipleBooksData = (bookArray) => {
   const { attachments } = bookArray;
   let multipleBooks = {
-    by_subprefix: {
-      "test" : {
-        url_path: `/asdasdw`,
-        title: 'asdwd',
-      }
-    }
+    by_subprefix: {}
   }
 
   const params = getUrlParams();
